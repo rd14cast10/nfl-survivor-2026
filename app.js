@@ -51,7 +51,7 @@ function logo(logos, name) {
 function teamLabel(name, record) {
   const span = document.createElement("span");
   span.append(document.createTextNode(`${name} `));
-  span.append(cell("small", "text-slate-400", record));
+  span.append(cell("small", "record", record));
   return span;
 }
 
@@ -125,81 +125,127 @@ function opponentText(week, team) {
   return game.favorite === game.home ? `vs. ${game.away}` : `at ${game.home}`;
 }
 
+const TEAM_COLORS = {
+  Arizona: "#97233F",
+  Atlanta: "#A71930",
+  Baltimore: "#241773",
+  Buffalo: "#00338D",
+  Carolina: "#0085CA",
+  Chicago: "#C83803",
+  Cincinnati: "#FB4F14",
+  Cleveland: "#FF3C00",
+  Dallas: "#003594",
+  Denver: "#FB4F14",
+  Detroit: "#0076B6",
+  "Green Bay": "#FFB612",
+  Houston: "#C8102E",
+  Indianapolis: "#002C5F",
+  Jacksonville: "#006778",
+  "Kansas City": "#E31837",
+  "L.A. Chargers": "#0080C6",
+  "L.A. Rams": "#003594",
+  "Las Vegas": "#A5ACAF",
+  Miami: "#008E97",
+  Minnesota: "#4F2683",
+  "New England": "#C60C30",
+  "New Orleans": "#D3BC8D",
+  "New York Giants": "#0B2265",
+  "N.Y. Jets": "#125740",
+  Philadelphia: "#004C54",
+  Pittsburgh: "#FFB612",
+  "San Francisco": "#AA0000",
+  Seattle: "#69BE28",
+  "Tampa Bay": "#D50A0A",
+  Tennessee: "#4B92DB",
+  Washington: "#5A1414",
+};
+
+function accent(name) {
+  return TEAM_COLORS[name] || "#e4c88a";
+}
+
+function labeledCell(className, label, text) {
+  const td = cell("td", className, text);
+  td.dataset.label = label;
+  return td;
+}
+
+function resultBadge(resultText, result) {
+  const bonus = resultText.includes("Bonus");
+  const score = bonus ? resultText.replace(/\s*·\s*Bonus/, "") : resultText;
+  const kind = result === "loss" ? "loss" : result === "tie" ? "tie" : "win";
+  const wrap = document.createElement("span");
+  wrap.append(cell("span", `badge badge-${kind}`, score));
+  if (bonus) wrap.append(cell("span", "badge badge-bonus", "Bonus"));
+  return wrap;
+}
+
 function finalRow(week) {
   const tr = document.createElement("tr");
-  tr.className = "border-t border-slate-700";
-  tr.append(cell("td", "p-4 font-bold text-slate-400", padWeek(week.week)));
+  tr.className = "pick-row";
+  tr.append(labeledCell("week-num", "Week", padWeek(week.week)));
   if (!week.pick) {
-    tr.append(cell("td", "p-4 font-bold", "No pick recorded"));
-    tr.append(cell("td", "p-4 font-bold text-slate-400", "—"));
-    tr.append(cell("td", "p-4 font-black text-rose-200", "−25"));
+    const selection = labeledCell("", "Selection");
+    selection.append(cell("span", "badge badge-miss", "No pick recorded"));
+    tr.append(selection);
+    tr.append(labeledCell("", "Result", "—"));
+    tr.append(labeledCell("points points-loss", "Points", "−25"));
     return tr;
   }
-  const selection = cell("td", "p-4");
-  selection.append(cell("strong", "", week.pick.team));
+  const selection = labeledCell("", "Selection");
+  selection.append(cell("span", "team-name", week.pick.team));
   selection.append(document.createElement("br"));
-  selection.append(cell("span", "text-slate-400", week.pick.opponent));
+  selection.append(cell("span", "opponent", week.pick.opponent));
   tr.append(selection);
-  tr.append(cell("td", "p-4 font-bold", week.pick.resultText));
-  tr.append(cell("td", "p-4 font-black text-emerald-300", week.pick.pointsText));
+  const result = labeledCell("", "Result");
+  result.append(resultBadge(week.pick.resultText, week.pick.result));
+  tr.append(result);
+  const negative = (week.pick.points ?? 0) < 0;
+  tr.append(labeledCell(negative ? "points points-loss" : "points points-win", "Points", week.pick.pointsText));
   return tr;
 }
 
 function openRow(week, pick) {
   const tr = document.createElement("tr");
-  tr.className = "border-t border-slate-600 bg-blue-400/10";
+  tr.className = "pick-row is-open";
   tr.id = "current-week-row";
-  tr.append(cell("td", "p-4 font-bold", padWeek(week.week)));
+  tr.append(labeledCell("week-num", "Week", padWeek(week.week)));
 
-  const selection = cell("td", "p-4");
+  const selection = labeledCell("", "Selection");
   selection.id = "current-week-cell";
   const locked = Boolean(pick && kickedOff(week, pick.team));
   if (!pick) {
     selection.append(cell("span", "", "No pick yet"));
-    const actions = cell("div", "mt-2");
-    const link = cell(
-      "a",
-      "rounded-lg bg-blue-600 px-3 py-2 text-xs font-extrabold text-white",
-      `Choose Week ${week.week} pick`,
-    );
+    const link = cell("a", "pick-btn", `Choose Week ${week.week} pick`);
     link.href = "#confidence";
-    actions.append(link);
-    selection.append(actions);
+    selection.append(link);
   } else {
-    selection.append(cell("strong", "", pick.team));
+    selection.append(cell("span", "team-name", pick.team));
     selection.append(document.createElement("br"));
-    selection.append(cell("span", "text-slate-400", opponentText(week, pick.team)));
+    selection.append(cell("span", "opponent", opponentText(week, pick.team)));
     if (!locked) {
-      const actions = cell("div", "mt-2");
-      const link = cell(
-        "a",
-        "rounded-lg border border-blue-400/70 bg-blue-500/20 px-3 py-2 text-xs font-extrabold text-blue-100",
-        "Change pick",
-      );
+      const link = cell("a", "pick-btn pick-btn-quiet", "Change pick");
       link.href = "#confidence";
-      actions.append(link);
-      selection.append(actions);
+      selection.append(link);
     }
   }
   tr.append(selection);
 
   if (pick?.result) {
     const final = week.finals[pick.team];
-    tr.append(cell("td", "p-4 font-bold", final.resultText || statusText(pick)));
+    const result = labeledCell("", "Result");
+    result.append(resultBadge(final.resultText || statusText(pick), pick.result));
+    tr.append(result);
     const negative = (pick.points ?? 0) < 0;
-    tr.append(
-      cell(
-        "td",
-        negative ? "p-4 font-black text-rose-200" : "p-4 font-black text-emerald-300",
-        final.pointsText || signed(pick.points ?? 0),
-      ),
-    );
+    tr.append(labeledCell(negative ? "points points-loss" : "points points-win", "Points", final.pointsText || signed(pick.points ?? 0)));
   } else if (pick) {
-    tr.append(cell("td", "p-4 font-bold", "Before kickoff"));
-    tr.append(cell("td", "p-4 font-black text-slate-400", "—"));
+    const result = labeledCell("", "Result");
+    result.append(cell("span", "badge badge-open", "Before kickoff"));
+    tr.append(result);
+    tr.append(labeledCell("points points-muted", "Points", "—"));
   } else {
-    tr.append(cell("td", "p-4 font-bold text-slate-400", "—"));
-    tr.append(cell("td", "p-4 font-black text-slate-400", "—"));
+    tr.append(labeledCell("dash", "Result", "—"));
+    tr.append(labeledCell("points points-muted", "Points", "—"));
   }
   return tr;
 }
@@ -210,52 +256,46 @@ function renderBoard(week, logos, used, pick, saving) {
   root.replaceChildren();
   const locked = Boolean(pick && kickedOff(week, pick.team));
   const games = [...week.games].sort((a, b) => b.rank - a.rank);
+  const topRank = games[0]?.rank;
   for (const game of games) {
-    const article = cell(
-      "article",
-      "grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3",
-    );
-    article.append(cell("p", "text-xs font-extrabold text-slate-400", String(game.rank)));
+    const article = cell("article", game.rank === topRank ? "match is-top" : "match");
+    article.style.setProperty("--accent", accent(game.favorite));
+    if (pick?.team === game.favorite) article.classList.add("is-selected");
+    article.append(cell("p", "match-rank", String(game.rank)));
     const body = cell("div", "min-w-0");
-    const matchup = cell("div", "flex flex-wrap items-center gap-2 text-sm font-bold");
+    const matchup = cell("div", "matchup");
     matchup.append(
       logo(logos, game.away),
       teamLabel(game.away, game.awayRecord),
-      cell("span", "text-slate-500", "at"),
+      cell("span", "at", "at"),
       logo(logos, game.home),
       teamLabel(game.home, game.homeRecord),
     );
-    const action = cell("div", "mt-2");
+    const bar = cell("div", "confidence-bar");
+    const fill = cell("span", "confidence-bar-fill");
+    fill.style.width = `${game.winsPer100}%`;
+    bar.append(fill);
+    const action = cell("div");
     const started = kickedOff(week, game.favorite);
     const selected = pick?.team === game.favorite;
     if (used.has(game.favorite)) {
-      action.append(cell("span", "text-xs font-extrabold uppercase tracking-wide text-slate-500", "Already used"));
+      action.append(cell("span", "status-note", "Already used"));
     } else if (!selected && (started || locked)) {
-      action.append(
-        cell(
-          "span",
-          "text-xs font-extrabold uppercase tracking-wide text-slate-500",
-          started ? "Kickoff passed" : "Pick locked",
-        ),
-      );
+      action.append(cell("span", "status-note", started ? "Kickoff passed" : "Pick locked"));
     } else {
       const button = cell("button");
       button.type = "button";
       button.dataset.team = game.favorite;
       button.disabled = saving !== null || locked;
-      button.className =
-        "rounded-lg border px-3 py-1.5 text-sm font-extrabold transition " +
-        (selected
-          ? "border-blue-100 bg-blue-500 text-white shadow-lg shadow-blue-900/60"
-          : "border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30");
+      button.className = selected ? "pick-btn is-selected" : "pick-btn is-quiet";
       button.textContent =
         saving === game.favorite ? "Saving…" : selected ? `${game.favorite} · Selected` : `Pick ${game.favorite}`;
       action.append(button);
     }
-    body.append(matchup, action);
-    const score = cell("div", "text-right");
-    score.append(cell("p", "text-lg font-black text-white", String(game.winsPer100)));
-    score.append(cell("p", "text-[10px] font-bold uppercase text-slate-400", "wins / 100"));
+    body.append(matchup, bar, action);
+    const score = cell("div", "match-prob");
+    score.append(cell("strong", "", String(game.winsPer100)));
+    score.append(cell("span", "", "wins / 100"));
     article.append(body, score);
     root.append(article);
   }
@@ -266,9 +306,9 @@ function renderUsed(weeks) {
   list.replaceChildren();
   for (const week of weeks) {
     if (week.status !== "final" || !week.pick) continue;
-    list.append(
-      cell("span", "rounded-full border border-slate-600 bg-[#0b1726] px-3 py-1.5 text-sm font-bold", week.pick.team),
-    );
+    const chip = cell("span", "chip", week.pick.team);
+    chip.style.setProperty("--accent", accent(week.pick.short));
+    list.append(chip);
   }
 }
 
