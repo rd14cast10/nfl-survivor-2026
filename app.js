@@ -161,7 +161,7 @@ const TEAM_COLORS = {
 };
 
 function accent(name) {
-  return TEAM_COLORS[name] || "#e4c88a";
+  return TEAM_COLORS[name] || "#162B6F";
 }
 
 function labeledCell(className, label, text) {
