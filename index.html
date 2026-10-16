@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Raul’s NFL Survivor Dashboard</title>
+  <meta name="description" content="Private 2026 NFL Survivor Pool tracker.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="antialiased">
+<main class="min-h-screen bg-[#07111d] text-slate-100">
+  <div class="mx-auto max-w-6xl px-5 pb-16 pt-8 sm:px-8">
+    <header class="mb-7 border-t-4 border-blue-400 pt-4">
+      <p class="text-xs font-extrabold uppercase tracking-[.16em] text-blue-300">2026 NFL Survivor Pool</p>
+      <h1 class="mt-1 text-4xl font-black tracking-tight text-white sm:text-5xl">Raul’s Survivor Dashboard</h1>
+      <p class="mt-2 text-slate-400">One team per week. Every team can be used only once.</p>
+    </header>
+    <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <article class="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#14253a] to-[#0d1928] p-5 shadow-xl shadow-black/20">
+        <p class="text-sm font-bold text-slate-400">Total points</p>
+        <p id="stat-points" class="mt-1 text-3xl font-black text-white">+80</p>
+        <p class="mt-1 text-sm text-slate-400">After completed weeks</p>
+      </article>
+      <article class="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#14253a] to-[#0d1928] p-5 shadow-xl shadow-black/20">
+        <p class="text-sm font-bold text-slate-400">Record</p>
+        <p id="stat-record" class="mt-1 text-3xl font-black text-white">5–0</p>
+        <p class="mt-1 text-sm text-slate-400">Survivor record</p>
+      </article>
+      <article class="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#14253a] to-[#0d1928] p-5 shadow-xl shadow-black/20">
+        <p class="text-sm font-bold text-slate-400">Teams used</p>
+        <p id="stat-used" class="mt-1 text-3xl font-black text-white">5</p>
+        <p id="stat-remain" class="mt-1 text-sm text-slate-400">27 remain eligible</p>
+      </article>
+      <article class="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#14253a] to-[#0d1928] p-5 shadow-xl shadow-black/20">
+        <p class="text-sm font-bold text-slate-400">Bonus pick</p>
+        <p class="mt-1 text-3xl font-black text-white">Used</p>
+        <p class="mt-1 text-sm text-slate-400">Kansas City · Week 3</p>
+      </article>
+    </section>
+    <h2 id="weekly" class="mb-3 mt-8 text-xl font-extrabold">Weekly picks</h2>
+    <section class="overflow-hidden rounded-2xl border border-slate-700 bg-[#101d2d]">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <thead class="text-xs uppercase tracking-wider text-slate-400">
+            <tr>
+              <th class="p-4">Week</th>
+              <th class="p-4">Selection</th>
+              <th class="p-4">Result</th>
+              <th class="p-4">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-slate-700">
+              <td class="p-4 font-bold text-slate-400">01</td>
+              <td class="p-4"><strong>Detroit Lions</strong><br><span class="text-slate-400">vs. New Orleans Saints</span></td>
+              <td class="p-4 font-bold">W 31–30 (OT)</td>
+              <td class="p-4 font-black text-emerald-300">+1</td>
+            </tr>
+            <tr class="border-t border-slate-700">
+              <td class="p-4 font-bold text-slate-400">02</td>
+              <td class="p-4"><strong>San Francisco 49ers</strong><br><span class="text-slate-400">vs. Miami Dolphins</span></td>
+              <td class="p-4 font-bold">W 35–13</td>
+              <td class="p-4 font-black text-emerald-300">+22</td>
+            </tr>
+            <tr class="border-t border-slate-700">
+              <td class="p-4 font-bold text-slate-400">03</td>
+              <td class="p-4"><strong>Kansas City Chiefs</strong><br><span class="text-slate-400">vs. Miami Dolphins</span></td>
+              <td class="p-4 font-bold">W 24–10 · Bonus</td>
+              <td class="p-4 font-black text-emerald-300">+28</td>
+            </tr>
+            <tr class="border-t border-slate-700">
+              <td class="p-4 font-bold text-slate-400">04</td>
+              <td class="p-4"><strong>Baltimore Ravens</strong><br><span class="text-slate-400">vs. Tennessee Titans</span></td>
+              <td class="p-4 font-bold">W 24–18</td>
+              <td class="p-4 font-black text-emerald-300">+6</td>
+            </tr>
+            <tr class="border-t border-slate-600 bg-blue-400/10">
+              <td class="p-4 font-bold">05</td>
+              <td id="week5-cell" class="p-4" colspan="3">
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <strong>Houston</strong>
+                    <p class="mt-1 text-sm font-bold text-emerald-300">Won by 23 · +23 points</p>
+                  </div>
+                  <a class="shrink-0 rounded-lg border border-blue-400/70 bg-blue-500/20 px-3 py-2 text-xs font-extrabold text-blue-100" href="#confidence">Change pick</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <p id="pick-error" class="mt-3 rounded-lg border border-rose-400/40 bg-rose-500/10 p-3 text-sm text-rose-200" hidden></p>
+    <section class="mt-8 grid gap-6 lg:grid-cols-[1.6fr_.75fr]">
+      <div>
+        <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 class="text-xl font-extrabold">Week 5 confidence board</h2>
+            <p class="mt-1 text-sm text-slate-400">Click an eligible projected winner to save your pick.</p>
+          </div>
+          <a class="text-sm font-bold text-blue-300 underline" href="https://www.nfeloapp.com/games/nfl-confidence-picks/" target="_blank" rel="noreferrer">View live NFELO board</a>
+        </div>
+        <div id="confidence" class="space-y-2 rounded-2xl border border-slate-600 bg-[#08131f] p-3">
+          <article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">16</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/tb.png" alt=""><span>Tampa Bay <small class="text-slate-400">0–4</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt=""><span>Dallas <small class="text-slate-400">2–2</small></span></div><div class="mt-2"><button type="button" data-team="Dallas" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Dallas</button></div></div><div class="text-right"><p class="text-lg font-black text-white">79</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">15</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/cin.png" alt=""><span>Cincinnati <small class="text-slate-400">2–2</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/mia.png" alt=""><span>Miami <small class="text-slate-400">0–4</small></span></div><div class="mt-2"><button type="button" data-team="Cincinnati" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Cincinnati</button></div></div><div class="text-right"><p class="text-lg font-black text-white">73</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">14</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/hou.png" alt=""><span>Houston <small class="text-slate-400">0–4</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/ten.png" alt=""><span>Tennessee <small class="text-slate-400">0–4</small></span></div><div class="mt-2"><button type="button" data-team="Houston" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-100 bg-blue-500 text-white shadow-lg shadow-blue-900/60">Houston · Selected</button></div></div><div class="text-right"><p class="text-lg font-black text-white">72</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">13</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/phi.png" alt=""><span>Philadelphia <small class="text-slate-400">2–2</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/jax.png" alt=""><span>Jacksonville <small class="text-slate-400">3–1</small></span></div><div class="mt-2"><button type="button" data-team="Jacksonville" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Jacksonville</button></div></div><div class="text-right"><p class="text-lg font-black text-white">71</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">12</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/det.png" alt=""><span>Detroit <small class="text-slate-400">2–2</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/ari.png" alt=""><span>Arizona <small class="text-slate-400">1–3</small></span></div><div class="mt-2"><span class="text-xs font-extrabold uppercase tracking-wide text-slate-500">Already used</span></div></div><div class="text-right"><p class="text-lg font-black text-white">70</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">11</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/lv.png" alt=""><span>Las Vegas <small class="text-slate-400">3–1</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/ne.png" alt=""><span>New England <small class="text-slate-400">2–2</small></span></div><div class="mt-2"><button type="button" data-team="New England" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick New England</button></div></div><div class="text-right"><p class="text-lg font-black text-white">70</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">10</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png" alt=""><span>New York Giants <small class="text-slate-400">3–1</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png" alt=""><span>Washington <small class="text-slate-400">1–3</small></span></div><div class="mt-2"><button type="button" data-team="Washington" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Washington</button></div></div><div class="text-right"><p class="text-lg font-black text-white">63</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">9</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/sf.png" alt=""><span>San Francisco <small class="text-slate-400">4–0</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/sea.png" alt=""><span>Seattle <small class="text-slate-400">3–1</small></span></div><div class="mt-2"><button type="button" data-team="Seattle" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Seattle</button></div></div><div class="text-right"><p class="text-lg font-black text-white">61</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">8</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/buf.png" alt=""><span>Buffalo <small class="text-slate-400">3–1</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/lar.png" alt=""><span>L.A. Rams <small class="text-slate-400">2–2</small></span></div><div class="mt-2"><button type="button" data-team="L.A. Rams" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick L.A. Rams</button></div></div><div class="text-right"><p class="text-lg font-black text-white">61</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">7</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/bal.png" alt=""><span>Baltimore <small class="text-slate-400">3–1</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/atl.png" alt=""><span>Atlanta <small class="text-slate-400">2–2</small></span></div><div class="mt-2"><button type="button" data-team="Atlanta" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Atlanta</button></div></div><div class="text-right"><p class="text-lg font-black text-white">61</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">6</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/min.png" alt=""><span>Minnesota <small class="text-slate-400">4–0</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/no.png" alt=""><span>New Orleans <small class="text-slate-400">1–3</small></span></div><div class="mt-2"><button type="button" data-team="Minnesota" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Minnesota</button></div></div><div class="text-right"><p class="text-lg font-black text-white">58</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">5</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/den.png" alt=""><span>Denver <small class="text-slate-400">2–2</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/lac.png" alt=""><span>L.A. Chargers <small class="text-slate-400">0–4</small></span></div><div class="mt-2"><button type="button" data-team="Denver" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Denver</button></div></div><div class="text-right"><p class="text-lg font-black text-white">56</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">4</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/cle.png" alt=""><span>Cleveland <small class="text-slate-400">3–1</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png" alt=""><span>N.Y. Jets <small class="text-slate-400">1–3</small></span></div><div class="mt-2"><button type="button" data-team="N.Y. Jets" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick N.Y. Jets</button></div></div><div class="text-right"><p class="text-lg font-black text-white">56</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">3</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/ind.png" alt=""><span>Indianapolis <small class="text-slate-400">2–2</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/pit.png" alt=""><span>Pittsburgh <small class="text-slate-400">2–2</small></span></div><div class="mt-2"><button type="button" data-team="Pittsburgh" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Pittsburgh</button></div></div><div class="text-right"><p class="text-lg font-black text-white">54</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article><article class="grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3"><p class="text-xs font-extrabold text-slate-400">2</p><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 text-sm font-bold"><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/chi.png" alt=""><span>Chicago <small class="text-slate-400">3–1</small></span><span class="text-slate-500">at</span><img class="h-7 w-7 object-contain" src="https://a.espncdn.com/i/teamlogos/nfl/500/gb.png" alt=""><span>Green Bay <small class="text-slate-400">2–2</small></span></div><div class="mt-2"><button type="button" data-team="Chicago" class="rounded-lg border px-3 py-1.5 text-sm font-extrabold transition border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30">Pick Chicago</button></div></div><div class="text-right"><p class="text-lg font-black text-white">50</p><p class="text-[10px] font-bold uppercase text-slate-400">wins / 100</p></div></article>
+        </div>
+      </div>
+      <aside class="space-y-6">
+        <div>
+          <h2 class="mb-3 text-xl font-extrabold">Used teams</h2>
+          <section class="rounded-2xl border border-slate-700 bg-[#101d2d] p-5">
+            <p class="text-sm font-bold text-slate-400">Unavailable for the rest of the season</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="rounded-full border border-slate-600 bg-[#0b1726] px-3 py-1.5 text-sm font-bold">Detroit Lions</span>
+              <span class="rounded-full border border-slate-600 bg-[#0b1726] px-3 py-1.5 text-sm font-bold">San Francisco 49ers</span>
+              <span class="rounded-full border border-slate-600 bg-[#0b1726] px-3 py-1.5 text-sm font-bold">Kansas City Chiefs</span>
+              <span class="rounded-full border border-slate-600 bg-[#0b1726] px-3 py-1.5 text-sm font-bold">Baltimore Ravens</span>
+            </div>
+          </section>
+        </div>
+        <div>
+          <h2 class="mb-3 text-xl font-extrabold">Bonus pick</h2>
+          <section class="rounded-2xl border border-emerald-700 bg-emerald-950/70 p-5">
+            <p class="text-sm font-bold text-emerald-200">Completed · Week 3</p>
+            <p class="my-1 text-3xl font-black text-emerald-300">+28</p>
+            <p class="text-sm leading-6 text-emerald-100/80">Kansas City won by 14, earning 28 points at the 2× win multiplier.</p>
+          </section>
+        </div>
+        <div>
+          <h2 class="mb-3 text-xl font-extrabold">Scoring</h2>
+          <section class="rounded-2xl border border-slate-700 bg-[#101d2d] p-5 text-sm leading-7 text-slate-300">
+            <strong class="text-white">Win</strong> +1 per point of margin<br>
+            <strong class="text-white">Loss</strong> −2 per point of margin<br>
+            <strong class="text-white">Tie</strong> 0 points<br>
+            <strong class="text-white">No pick / duplicate</strong> −25 points<br>
+            <br>
+            One bonus pick per season: wins are doubled and losses are multiplied by four.
+          </section>
+        </div>
+      </aside>
+    </section>
+    <p class="mt-8 text-xs text-slate-500">Confidence board uses NFELO model probabilities. Pick and scoring data are saved privately.</p>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
