@@ -24,7 +24,9 @@
     "Seattle": {
       "result": "loss",
       "margin": 3,
-      "note": "Thursday, Oct 15, 2026: Denver 17, Seattle 14 (OT). NFELO still lists both teams at 3-2."
+      "resultText": "L 14–17 (OT)",
+      "pointsText": "−6",
+      "note": "Thursday, Oct 15, 2026: Denver 17, Seattle 14 (OT). Kickoff has passed, so Seattle can no longer be chosen. NFELO still lists both teams at 3-2."
     }
   }
 }

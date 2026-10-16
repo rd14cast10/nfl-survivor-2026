@@ -111,6 +111,20 @@ function renderWeeks(weeks, openWeek, pick) {
   }
 }
 
+function gameFor(week, team) {
+  return week.games?.find((game) => game.favorite === team);
+}
+
+function kickedOff(week, team) {
+  return Boolean(week.finals?.[team]);
+}
+
+function opponentText(week, team) {
+  const game = gameFor(week, team);
+  if (!game) return "";
+  return game.favorite === game.home ? `vs. ${game.away}` : `at ${game.home}`;
+}
+
 function finalRow(week) {
   const tr = document.createElement("tr");
   tr.className = "border-t border-slate-700";
@@ -134,34 +148,59 @@ function finalRow(week) {
 function openRow(week, pick) {
   const tr = document.createElement("tr");
   tr.className = "border-t border-slate-600 bg-blue-400/10";
+  tr.id = "current-week-row";
   tr.append(cell("td", "p-4 font-bold", padWeek(week.week)));
-  const td = cell("td", "p-4");
-  td.colSpan = 3;
-  td.id = "current-week-cell";
-  const wrap = cell("div", "flex items-center justify-between gap-4");
-  if (pick) {
-    const left = document.createElement("div");
-    left.append(cell("strong", "", pick.team));
-    left.append(cell("p", "mt-1 text-sm font-bold text-emerald-300", statusText(pick)));
+
+  const selection = cell("td", "p-4");
+  selection.id = "current-week-cell";
+  const locked = Boolean(pick && kickedOff(week, pick.team));
+  if (!pick) {
+    selection.append(cell("span", "", "No pick yet"));
+    const actions = cell("div", "mt-2");
     const link = cell(
       "a",
-      "shrink-0 rounded-lg border border-blue-400/70 bg-blue-500/20 px-3 py-2 text-xs font-extrabold text-blue-100",
-      "Change pick",
-    );
-    link.href = "#confidence";
-    wrap.append(left, link);
-  } else {
-    wrap.append(cell("span", "", statusText(null)));
-    const link = cell(
-      "a",
-      "shrink-0 rounded-lg bg-blue-600 px-3 py-2 text-xs font-extrabold text-white",
+      "rounded-lg bg-blue-600 px-3 py-2 text-xs font-extrabold text-white",
       `Choose Week ${week.week} pick`,
     );
     link.href = "#confidence";
-    wrap.append(link);
+    actions.append(link);
+    selection.append(actions);
+  } else {
+    selection.append(cell("strong", "", pick.team));
+    selection.append(document.createElement("br"));
+    selection.append(cell("span", "text-slate-400", opponentText(week, pick.team)));
+    if (!locked) {
+      const actions = cell("div", "mt-2");
+      const link = cell(
+        "a",
+        "rounded-lg border border-blue-400/70 bg-blue-500/20 px-3 py-2 text-xs font-extrabold text-blue-100",
+        "Change pick",
+      );
+      link.href = "#confidence";
+      actions.append(link);
+      selection.append(actions);
+    }
   }
-  td.append(wrap);
-  tr.append(td);
+  tr.append(selection);
+
+  if (pick?.result) {
+    const final = week.finals[pick.team];
+    tr.append(cell("td", "p-4 font-bold", final.resultText || statusText(pick)));
+    const negative = (pick.points ?? 0) < 0;
+    tr.append(
+      cell(
+        "td",
+        negative ? "p-4 font-black text-rose-200" : "p-4 font-black text-emerald-300",
+        final.pointsText || signed(pick.points ?? 0),
+      ),
+    );
+  } else if (pick) {
+    tr.append(cell("td", "p-4 font-bold", "Before kickoff"));
+    tr.append(cell("td", "p-4 font-black text-slate-400", "—"));
+  } else {
+    tr.append(cell("td", "p-4 font-bold text-slate-400", "—"));
+    tr.append(cell("td", "p-4 font-black text-slate-400", "—"));
+  }
   return tr;
 }
 
@@ -169,6 +208,7 @@ function renderBoard(week, logos, used, pick, saving) {
   document.getElementById("board-title").textContent = `Week ${week.week} confidence board`;
   const root = document.getElementById("confidence");
   root.replaceChildren();
+  const locked = Boolean(pick && kickedOff(week, pick.team));
   const games = [...week.games].sort((a, b) => b.rank - a.rank);
   for (const game of games) {
     const article = cell(
@@ -186,14 +226,23 @@ function renderBoard(week, logos, used, pick, saving) {
       teamLabel(game.home, game.homeRecord),
     );
     const action = cell("div", "mt-2");
+    const started = kickedOff(week, game.favorite);
+    const selected = pick?.team === game.favorite;
     if (used.has(game.favorite)) {
       action.append(cell("span", "text-xs font-extrabold uppercase tracking-wide text-slate-500", "Already used"));
+    } else if (!selected && (started || locked)) {
+      action.append(
+        cell(
+          "span",
+          "text-xs font-extrabold uppercase tracking-wide text-slate-500",
+          started ? "Kickoff passed" : "Pick locked",
+        ),
+      );
     } else {
-      const selected = pick?.team === game.favorite;
       const button = cell("button");
       button.type = "button";
       button.dataset.team = game.favorite;
-      button.disabled = saving !== null;
+      button.disabled = saving !== null || locked;
       button.className =
         "rounded-lg border px-3 py-1.5 text-sm font-extrabold transition " +
         (selected
@@ -319,6 +368,14 @@ async function main() {
     const button = event.target.closest("[data-team]");
     if (!button || state.saving) return;
     const team = button.getAttribute("data-team");
+    if (state.pick && kickedOff(openWeek, state.pick.team)) {
+      showError("Kickoff has passed. This pick can no longer be changed.");
+      return;
+    }
+    if (kickedOff(openWeek, team)) {
+      showError("That team has already kicked off.");
+      return;
+    }
     const pick = materialize(openWeek, used, team, Date.now());
     if (!pick) {
       showError(`That team is not available for Week ${openWeek.week}.`);
