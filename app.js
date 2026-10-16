@@ -1,39 +1,4 @@
-// Standalone replacement for the hosted /api/pick store.
-// The original key held a team name. This page also accepts that string
-// and otherwise stores the full pick: team, result, margin, points, updated_at.
-const STORAGE_KEY = "raul-survivor-week-5-pick";
-const BASE_POINTS = 57;
-const USED = new Set(["Detroit", "San Francisco", "Kansas City", "Baltimore"]);
-
-// Week 5 finals for the projected favorite on each confidence-board game.
-// Scores: Pro Football Reference week 5, 2026. Houston 26–3 matches the
-// hosted pick (win, margin 23, +23).
-const FINALS = {
-  Dallas: { result: "loss", margin: 8 },
-  Cincinnati: { result: "win", margin: 7 },
-  Houston: { result: "win", margin: 23 },
-  Jacksonville: { result: "win", margin: 2 },
-  Detroit: { result: "win", margin: 24 },
-  "New England": { result: "win", margin: 28 },
-  Washington: { result: "tie", margin: 0 },
-  Seattle: { result: "loss", margin: 3 },
-  "L.A. Rams": { result: "loss", margin: 3 },
-  Atlanta: { result: "loss", margin: 7 },
-  Minnesota: { result: "win", margin: 10 },
-  Denver: { result: "win", margin: 6 },
-  "N.Y. Jets": { result: "win", margin: 5 },
-  Pittsburgh: { result: "win", margin: 12 },
-  Chicago: { result: "loss", margin: 24 },
-};
-
-// Pick saved on the hosted dashboard before this static copy was made.
-const DEFAULT_PICK = {
-  team: "Houston",
-  result: "win",
-  margin: 23,
-  points: 23,
-  updated_at: 1791868007387,
-};
+const NO_PICK_POINTS = -25;
 
 function pointsFor(result, margin) {
   if (result === "win") return margin;
@@ -42,51 +7,19 @@ function pointsFor(result, margin) {
   return null;
 }
 
-function scoredPick(team, updatedAt) {
-  const final = FINALS[team];
-  if (!final || USED.has(team)) return null;
-  const points = pointsFor(final.result, final.margin);
-  if (points === null) return null;
-  return {
-    team,
-    result: final.result,
-    margin: final.margin,
-    points,
-    updated_at: updatedAt || Date.now(),
-  };
+function padWeek(week) {
+  return String(week).padStart(2, "0");
 }
 
-function pickFromStored(raw) {
-  if (typeof raw !== "string" || raw.length === 0) return null;
-  if (Object.prototype.hasOwnProperty.call(FINALS, raw)) return scoredPick(raw);
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return null;
-  }
-  if (typeof parsed === "string") return pickFromStored(parsed);
-  if (!parsed || typeof parsed.team !== "string" || USED.has(parsed.team)) return null;
-  if (parsed.result == null) return scoredPick(parsed.team, parsed.updated_at);
-  if (!["win", "loss", "tie"].includes(parsed.result)) return null;
-  if (!Number.isInteger(parsed.margin) || parsed.margin < 0) return null;
-  const points = pointsFor(parsed.result, parsed.margin);
-  if (points === null) return null;
-  return {
-    team: parsed.team,
-    result: parsed.result,
-    margin: parsed.margin,
-    points,
-    updated_at: parsed.updated_at || Date.now(),
-  };
+function signed(points) {
+  return `${points > 0 ? "+" : ""}${points}`;
 }
 
 function statusText(pick) {
   if (!pick) return "Open — select an eligible projected favorite before its kickoff.";
   if (!pick.result) return "Saved securely · You can change your pick before kickoff.";
   const label = pick.result === "win" ? "Won" : pick.result === "loss" ? "Lost" : "Tied";
-  const points = (pick.points ?? 0) > 0 ? `+${pick.points}` : `${pick.points}`;
-  return `${label} by ${pick.margin} · ${points} points`;
+  return `${label} by ${pick.margin} · ${signed(pick.points ?? 0)} points`;
 }
 
 function showError(message) {
@@ -100,118 +33,311 @@ function showError(message) {
   el.textContent = message;
 }
 
-function paint(pick, saving) {
-  const extra = pick?.points ?? 0;
-  const total = BASE_POINTS + extra;
-  document.getElementById("stat-points").textContent = `${total >= 0 ? "+" : ""}${total}`;
-  document.getElementById("stat-record").textContent =
-    pick?.result === "win" ? "5–0" : pick?.result === "loss" ? "4–1" : "4–0";
-  document.getElementById("stat-used").textContent = pick ? "5" : "4";
-  document.getElementById("stat-remain").textContent = pick ? "27 remain eligible" : "28 remain eligible";
+function cell(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text != null) el.textContent = text;
+  return el;
+}
 
-  const cell = document.getElementById("week5-cell");
-  const wrap = document.createElement("div");
-  wrap.className = "flex items-center justify-between gap-4";
+function logo(logos, name) {
+  const img = document.createElement("img");
+  img.className = "h-7 w-7 object-contain";
+  img.alt = "";
+  img.src = `https://a.espncdn.com/i/teamlogos/nfl/500/${logos[name]}.png`;
+  return img;
+}
+
+function teamLabel(name, record) {
+  const span = document.createElement("span");
+  span.append(document.createTextNode(`${name} `));
+  span.append(cell("small", "text-slate-400", record));
+  return span;
+}
+
+async function loadSeason() {
+  const season = await fetch("data/season.json").then((response) => {
+    if (!response.ok) throw new Error("season");
+    return response.json();
+  });
+  const weeks = await Promise.all(
+    season.weeks.map(async (id) => {
+      const response = await fetch(`data/weeks/${id}.json`);
+      if (!response.ok) throw new Error(id);
+      return response.json();
+    }),
+  );
+  weeks.sort((a, b) => a.week - b.week);
+  return { season, weeks };
+}
+
+function usedShortNames(weeks) {
+  return new Set(
+    weeks.filter((week) => week.status === "final" && week.pick?.short).map((week) => week.pick.short),
+  );
+}
+
+function completedPoints(weeks) {
+  return weeks
+    .filter((week) => week.status === "final")
+    .reduce((total, week) => total + (week.pick ? week.pick.points : NO_PICK_POINTS), 0);
+}
+
+function recordText(weeks, current) {
+  let wins = 0;
+  let losses = 0;
+  for (const week of weeks) {
+    if (week.status !== "final" || !week.pick) continue;
+    if (week.pick.result === "win") wins += 1;
+    if (week.pick.result === "loss") losses += 1;
+  }
+  if (current?.result === "win") wins += 1;
+  if (current?.result === "loss") losses += 1;
+  return `${wins}–${losses}`;
+}
+
+function renderWeeks(weeks, openWeek, pick) {
+  const body = document.getElementById("weeks-body");
+  body.replaceChildren();
+  for (const week of weeks) {
+    if (week.status === "open") {
+      body.append(openRow(week, pick));
+      continue;
+    }
+    body.append(finalRow(week));
+  }
+  if (openWeek && !weeks.some((week) => week.week === openWeek.week && week.status === "open")) {
+    body.append(openRow(openWeek, pick));
+  }
+}
+
+function finalRow(week) {
+  const tr = document.createElement("tr");
+  tr.className = "border-t border-slate-700";
+  tr.append(cell("td", "p-4 font-bold text-slate-400", padWeek(week.week)));
+  if (!week.pick) {
+    tr.append(cell("td", "p-4 font-bold", "No pick recorded"));
+    tr.append(cell("td", "p-4 font-bold text-slate-400", "—"));
+    tr.append(cell("td", "p-4 font-black text-rose-200", "−25"));
+    return tr;
+  }
+  const selection = cell("td", "p-4");
+  selection.append(cell("strong", "", week.pick.team));
+  selection.append(document.createElement("br"));
+  selection.append(cell("span", "text-slate-400", week.pick.opponent));
+  tr.append(selection);
+  tr.append(cell("td", "p-4 font-bold", week.pick.resultText));
+  tr.append(cell("td", "p-4 font-black text-emerald-300", week.pick.pointsText));
+  return tr;
+}
+
+function openRow(week, pick) {
+  const tr = document.createElement("tr");
+  tr.className = "border-t border-slate-600 bg-blue-400/10";
+  tr.append(cell("td", "p-4 font-bold", padWeek(week.week)));
+  const td = cell("td", "p-4");
+  td.colSpan = 3;
+  td.id = "current-week-cell";
+  const wrap = cell("div", "flex items-center justify-between gap-4");
   if (pick) {
     const left = document.createElement("div");
-    const strong = document.createElement("strong");
-    strong.textContent = pick.team;
-    const status = document.createElement("p");
-    status.className = "mt-1 text-sm font-bold text-emerald-300";
-    status.textContent = statusText(pick);
-    left.append(strong, status);
-    const link = document.createElement("a");
-    link.className =
-      "shrink-0 rounded-lg border border-blue-400/70 bg-blue-500/20 px-3 py-2 text-xs font-extrabold text-blue-100";
+    left.append(cell("strong", "", pick.team));
+    left.append(cell("p", "mt-1 text-sm font-bold text-emerald-300", statusText(pick)));
+    const link = cell(
+      "a",
+      "shrink-0 rounded-lg border border-blue-400/70 bg-blue-500/20 px-3 py-2 text-xs font-extrabold text-blue-100",
+      "Change pick",
+    );
     link.href = "#confidence";
-    link.textContent = "Change pick";
     wrap.append(left, link);
   } else {
-    const span = document.createElement("span");
-    span.textContent = statusText(null);
-    const link = document.createElement("a");
-    link.className = "shrink-0 rounded-lg bg-blue-600 px-3 py-2 text-xs font-extrabold text-white";
+    wrap.append(cell("span", "", statusText(null)));
+    const link = cell(
+      "a",
+      "shrink-0 rounded-lg bg-blue-600 px-3 py-2 text-xs font-extrabold text-white",
+      `Choose Week ${week.week} pick`,
+    );
     link.href = "#confidence";
-    link.textContent = "Choose Week 5 pick";
-    wrap.append(span, link);
+    wrap.append(link);
   }
-  cell.replaceChildren(wrap);
+  td.append(wrap);
+  tr.append(td);
+  return tr;
+}
 
-  document.querySelectorAll("[data-team]").forEach((button) => {
+function renderBoard(week, logos, used, pick, saving) {
+  document.getElementById("board-title").textContent = `Week ${week.week} confidence board`;
+  const root = document.getElementById("confidence");
+  root.replaceChildren();
+  const games = [...week.games].sort((a, b) => b.rank - a.rank);
+  for (const game of games) {
+    const article = cell(
+      "article",
+      "grid grid-cols-[34px_1fr_auto] items-center gap-3 rounded-xl border border-slate-700 bg-gradient-to-r from-[#122238] to-[#0e1a2a] p-3",
+    );
+    article.append(cell("p", "text-xs font-extrabold text-slate-400", String(game.rank)));
+    const body = cell("div", "min-w-0");
+    const matchup = cell("div", "flex flex-wrap items-center gap-2 text-sm font-bold");
+    matchup.append(
+      logo(logos, game.away),
+      teamLabel(game.away, game.awayRecord),
+      cell("span", "text-slate-500", "at"),
+      logo(logos, game.home),
+      teamLabel(game.home, game.homeRecord),
+    );
+    const action = cell("div", "mt-2");
+    if (used.has(game.favorite)) {
+      action.append(cell("span", "text-xs font-extrabold uppercase tracking-wide text-slate-500", "Already used"));
+    } else {
+      const selected = pick?.team === game.favorite;
+      const button = cell("button");
+      button.type = "button";
+      button.dataset.team = game.favorite;
+      button.disabled = saving !== null;
+      button.className =
+        "rounded-lg border px-3 py-1.5 text-sm font-extrabold transition " +
+        (selected
+          ? "border-blue-100 bg-blue-500 text-white shadow-lg shadow-blue-900/60"
+          : "border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30");
+      button.textContent =
+        saving === game.favorite ? "Saving…" : selected ? `${game.favorite} · Selected` : `Pick ${game.favorite}`;
+      action.append(button);
+    }
+    body.append(matchup, action);
+    const score = cell("div", "text-right");
+    score.append(cell("p", "text-lg font-black text-white", String(game.winsPer100)));
+    score.append(cell("p", "text-[10px] font-bold uppercase text-slate-400", "wins / 100"));
+    article.append(body, score);
+    root.append(article);
+  }
+}
+
+function renderUsed(weeks) {
+  const list = document.getElementById("used-list");
+  list.replaceChildren();
+  for (const week of weeks) {
+    if (week.status !== "final" || !week.pick) continue;
+    list.append(
+      cell("span", "rounded-full border border-slate-600 bg-[#0b1726] px-3 py-1.5 text-sm font-bold", week.pick.team),
+    );
+  }
+}
+
+function renderStats(season, weeks, pick) {
+  const base = completedPoints(weeks);
+  const extra = pick?.points ?? 0;
+  const total = base + extra;
+  const usedCount =
+    weeks.filter((week) => week.status === "final" && week.pick).length + (pick ? 1 : 0);
+  document.getElementById("stat-points").textContent = signed(total);
+  document.getElementById("stat-record").textContent = recordText(weeks, pick);
+  document.getElementById("stat-used").textContent = String(usedCount);
+  document.getElementById("stat-remain").textContent = `${season.teamCount - usedCount} remain eligible`;
+}
+
+function materialize(week, used, team, updatedAt) {
+  if (!team || used.has(team)) return null;
+  const game = week.games.find((entry) => entry.favorite === team);
+  if (!game) return null;
+  const final = week.finals?.[team];
+  if (!final) {
+    return { team, result: null, margin: null, points: null, updated_at: updatedAt || Date.now() };
+  }
+  const points = pointsFor(final.result, final.margin);
+  if (points === null || !Number.isInteger(final.margin) || final.margin < 0) return null;
+  return {
+    team,
+    result: final.result,
+    margin: final.margin,
+    points,
+    updated_at: updatedAt || Date.now(),
+  };
+}
+
+function readStored(week, used) {
+  let raw;
+  try {
+    raw = localStorage.getItem(week.storageKey);
+  } catch {
+    return { error: "Your saved pick is temporarily unavailable." };
+  }
+  if (raw === null || raw === "") return { pick: null };
+  let team = raw;
+  let updatedAt = null;
+  if (raw.startsWith("{") || raw.startsWith("\"")) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "string") team = parsed;
+      else if (parsed && typeof parsed.team === "string") {
+        team = parsed.team;
+        updatedAt = parsed.updated_at;
+      } else return { error: "Your saved pick is temporarily unavailable." };
+    } catch {
+      team = raw;
+    }
+  }
+  const pick = materialize(week, used, team, updatedAt);
+  if (!pick) return { error: "Your saved pick is temporarily unavailable." };
+  return { pick };
+}
+
+function paint(state) {
+  renderStats(state.season, state.weeks, state.pick);
+  renderWeeks(state.weeks, state.openWeek, state.pick);
+  renderBoard(state.openWeek, state.season.logos, state.used, state.pick, state.saving);
+  renderUsed(state.weeks);
+}
+
+async function main() {
+  let season;
+  let weeks;
+  try {
+    ({ season, weeks } = await loadSeason());
+  } catch {
+    showError("Your saved pick is temporarily unavailable.");
+    return;
+  }
+  const openWeek = weeks.find((week) => week.week === season.currentWeek && week.status === "open");
+  if (!openWeek) {
+    showError("Your saved pick is temporarily unavailable.");
+    return;
+  }
+  const used = usedShortNames(weeks);
+  const stored = readStored(openWeek, used);
+  const state = {
+    season,
+    weeks,
+    openWeek,
+    used,
+    pick: stored.pick || null,
+    saving: null,
+  };
+  if (stored.error) showError(stored.error);
+  paint(state);
+
+  document.getElementById("confidence").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-team]");
+    if (!button || state.saving) return;
     const team = button.getAttribute("data-team");
-    const selected = pick?.team === team;
-    button.disabled = saving !== null;
-    button.className =
-      "rounded-lg border px-3 py-1.5 text-sm font-extrabold transition " +
-      (selected
-        ? "border-blue-100 bg-blue-500 text-white shadow-lg shadow-blue-900/60"
-        : "border-blue-400/80 bg-blue-500/15 text-blue-200 hover:bg-blue-500/30");
-    button.textContent = saving === team ? "Saving…" : selected ? `${team} · Selected` : `Pick ${team}`;
+    const pick = materialize(openWeek, used, team, Date.now());
+    if (!pick) {
+      showError(`That team is not available for Week ${openWeek.week}.`);
+      return;
+    }
+    state.saving = team;
+    showError("");
+    paint(state);
+    try {
+      localStorage.setItem(openWeek.storageKey, JSON.stringify(pick));
+      state.pick = pick;
+      document.getElementById("weekly")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    } catch {
+      showError("Unable to save your pick.");
+    } finally {
+      state.saving = null;
+      paint(state);
+    }
   });
 }
 
-let current = null;
-let saving = null;
-
-function persist(pick) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(pick));
-}
-
-function load() {
-  let raw;
-  try {
-    raw = localStorage.getItem(STORAGE_KEY);
-  } catch {
-    showError("Your saved pick is temporarily unavailable.");
-    current = null;
-    paint(null, null);
-    return;
-  }
-  if (raw === null) {
-    current = { ...DEFAULT_PICK };
-    try {
-      persist(current);
-    } catch {
-      showError("Unable to save your pick.");
-    }
-    paint(current, null);
-    return;
-  }
-  const pick = pickFromStored(raw);
-  if (!pick) {
-    showError("Your saved pick is temporarily unavailable.");
-    current = null;
-    paint(null, null);
-    return;
-  }
-  current = pick;
-  paint(current, null);
-}
-
-function choose(team) {
-  if (saving) return;
-  const pick = scoredPick(team, Date.now());
-  if (!pick) {
-    showError("That team is not available for Week 5.");
-    return;
-  }
-  saving = team;
-  showError("");
-  paint(current, saving);
-  try {
-    persist(pick);
-    current = pick;
-    document.getElementById("weekly")?.scrollIntoView({ behavior: "smooth", block: "center" });
-  } catch {
-    showError("Unable to save your pick.");
-  } finally {
-    saving = null;
-    paint(current, null);
-  }
-}
-
-document.querySelectorAll("[data-team]").forEach((button) => {
-  button.addEventListener("click", () => choose(button.getAttribute("data-team")));
-});
-
-load();
+main();

@@ -1,0 +1,14 @@
+{
+  "week": 3,
+  "status": "final",
+  "pick": {
+    "team": "Kansas City Chiefs",
+    "short": "Kansas City",
+    "opponent": "vs. Miami Dolphins",
+    "resultText": "W 24–10 · Bonus",
+    "pointsText": "+28",
+    "result": "win",
+    "margin": 14,
+    "points": 28
+  }
+}

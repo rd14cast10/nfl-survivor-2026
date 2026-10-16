@@ -1,0 +1,14 @@
+{
+  "week": 5,
+  "status": "final",
+  "pick": {
+    "team": "Houston Texans",
+    "short": "Houston",
+    "opponent": "vs. Tennessee Titans",
+    "resultText": "W 26–3",
+    "pointsText": "+23",
+    "result": "win",
+    "margin": 23,
+    "points": 23
+  }
+}
