@@ -9,8 +9,8 @@
   --win: #7dcea0;
   --loss: #f0a3a8;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  --sans: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
-  --display: "Fraunces", "Iowan Old Style", Palatino, serif;
+  --sans: "Open Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --display: "Open Sans", "Segoe UI", sans-serif;
   color-scheme: dark;
 }
 
