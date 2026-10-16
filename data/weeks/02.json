@@ -1,0 +1,14 @@
+{
+  "week": 2,
+  "status": "final",
+  "pick": {
+    "team": "San Francisco 49ers",
+    "short": "San Francisco",
+    "opponent": "vs. Miami Dolphins",
+    "resultText": "W 35–13",
+    "pointsText": "+22",
+    "result": "win",
+    "margin": 22,
+    "points": 22
+  }
+}

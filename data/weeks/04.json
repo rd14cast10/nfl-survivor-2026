@@ -1,0 +1,14 @@
+{
+  "week": 4,
+  "status": "final",
+  "pick": {
+    "team": "Baltimore Ravens",
+    "short": "Baltimore",
+    "opponent": "vs. Tennessee Titans",
+    "resultText": "W 24–18",
+    "pointsText": "+6",
+    "result": "win",
+    "margin": 6,
+    "points": 6
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "week": 1,
+  "status": "final",
+  "pick": {
+    "team": "Detroit Lions",
+    "short": "Detroit",
+    "opponent": "vs. New Orleans Saints",
+    "resultText": "W 31–30 (OT)",
+    "pointsText": "+1",
+    "result": "win",
+    "margin": 1,
+    "points": 1
+  }
+}
