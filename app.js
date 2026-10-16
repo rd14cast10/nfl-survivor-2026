@@ -96,19 +96,149 @@ function recordText(weeks, current) {
   return `${wins}–${losses}`;
 }
 
-function renderWeeks(weeks, openWeek, pick) {
-  const body = document.getElementById("weeks-body");
-  body.replaceChildren();
-  for (const week of weeks) {
-    if (week.status === "open") {
-      body.append(openRow(week, pick));
-      continue;
-    }
-    body.append(finalRow(week));
+function proj(value) {
+  if (value == null || Number.isNaN(Number(value))) return "—";
+  const rounded = Math.round(Number(value) * 10) / 10;
+  const text = Math.abs(rounded).toFixed(1);
+  if (rounded > 0) return `+${text}`;
+  if (rounded < 0) return `−${text}`;
+  return "0.0";
+}
+
+function pctLabel(value) {
+  if (value == null) return "—";
+  return `${Math.round(value * 100)}%`;
+}
+
+function kickoffLabel(iso) {
+  if (!iso) return "Kickoff time not posted";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "Kickoff time not posted";
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/New_York",
+    timeZoneName: "short",
+  }).format(date);
+}
+
+function logoEl(logos, name, className) {
+  const code = logos?.[name];
+  if (!code) return null;
+  const img = document.createElement("img");
+  img.alt = "";
+  img.className = className || "logo";
+  img.src = `https://a.espncdn.com/i/teamlogos/nfl/500/${code}.png`;
+  return img;
+}
+
+function scenarioFor(planner, pick) {
+  if (!planner?.scenarios) return null;
+  if (pick?.team && planner.scenarios[pick.team]) return planner.scenarios[pick.team];
+  return planner.scenarios[""] || null;
+}
+
+function planRowFor(planner, pick, week) {
+  return scenarioFor(planner, pick)?.weeks.find((row) => row.week === week) || null;
+}
+
+function scheduledGame(planner, week, team) {
+  const entry = planner?.weeks?.find((item) => item.week === week);
+  if (!entry || !team) return null;
+  return entry.games.find((game) => game.home === team || game.away === team) || null;
+}
+
+function placeText(home, opponent) {
+  if (!opponent) return "";
+  return home ? `vs. ${opponent}` : `at ${opponent}`;
+}
+
+function renderCalendar(state) {
+  const root = document.getElementById("calendar");
+  if (!root) return;
+  root.replaceChildren();
+  for (let number = 1; number <= 18; number += 1) {
+    const record = state.weeks.find((week) => week.week === number);
+    const button = cell("button", "tile");
+    button.type = "button";
+    button.dataset.week = String(number);
+    button.append(cell("span", "tile-week", padWeek(number)));
+    if (record?.status === "final") renderPastTile(button, record, state.season.logos);
+    else if (state.openWeek && number === state.openWeek.week) renderOpenTile(button, state.openWeek, state.pick, state.season.logos);
+    else renderFutureTile(button, planRowFor(state.planner, state.pick, number), state.season.logos, number);
+    root.append(button);
   }
-  if (openWeek && !weeks.some((week) => week.week === openWeek.week && week.status === "open")) {
-    body.append(openRow(openWeek, pick));
+}
+
+function renderPastTile(button, week, logos) {
+  button.classList.add("is-past");
+  if (!week.pick) {
+    button.append(cell("span", "tile-mark", "No pick"));
+    button.append(cell("span", "badge badge-miss", "−25"));
+    button.setAttribute("aria-label", `Week ${week.week}, no pick recorded, minus 25`);
+    return;
   }
+  const img = logoEl(logos, week.pick.short, "tile-logo");
+  if (img) button.append(img);
+  button.append(cell("span", "tile-team", week.pick.short));
+  const badges = cell("span", "tile-badges");
+  badges.append(resultBadge(week.pick.resultText, week.pick.result));
+  button.append(badges);
+  const negative = (week.pick.points ?? 0) < 0;
+  button.append(cell("span", negative ? "tile-points points-loss" : "tile-points points-win", week.pick.pointsText));
+  button.setAttribute("aria-label", `Week ${week.week}, ${week.pick.team}, ${week.pick.resultText}, ${week.pick.pointsText}`);
+}
+
+function renderOpenTile(button, week, pick, logos) {
+  button.classList.add("is-open");
+  button.id = "current-week-row";
+  if (!pick) {
+    button.classList.add("is-empty");
+    button.append(cell("span", "tile-mark", "Make pick"));
+    button.setAttribute("aria-label", `Week ${week.week}, make a pick`);
+    return;
+  }
+  button.classList.add("is-yours");
+  button.style.setProperty("--accent", accent(pick.team));
+  const img = logoEl(logos, pick.team, "tile-logo");
+  if (img) button.append(img);
+  button.append(cell("span", "tile-team", pick.team));
+  if (pick.result) {
+    const final = week.finals?.[pick.team];
+    const badges = cell("span", "tile-badges");
+    badges.append(resultBadge(final?.resultText || statusText(pick), pick.result));
+    button.append(badges);
+    const negative = (pick.points ?? 0) < 0;
+    button.append(cell("span", negative ? "tile-points points-loss" : "tile-points points-win", final?.pointsText || signed(pick.points ?? 0)));
+  } else {
+    button.append(cell("span", "badge badge-open", "Your pick"));
+    button.append(cell("span", "tile-points points-muted", "Before kickoff"));
+  }
+  button.setAttribute("aria-label", `Week ${week.week}, your pick ${pick.team}`);
+}
+
+function renderFutureTile(button, row, logos, number) {
+  button.classList.add("is-future");
+  if (!row?.team) {
+    button.append(cell("span", "tile-mark", "Planning"));
+    button.setAttribute("aria-label", `Week ${number}, recommendation unavailable`);
+    return;
+  }
+  button.classList.add("is-recommended");
+  button.style.setProperty("--accent", accent(row.team));
+  const img = logoEl(logos, row.team, "tile-logo");
+  if (img) button.append(img);
+  button.append(cell("span", "tile-team", row.team));
+  button.append(cell("span", "badge badge-plan", "Recommended"));
+  const negative = row.expectedPoints < 0;
+  button.append(cell("span", negative ? "tile-points points-loss" : "tile-points points-win", proj(row.expectedPoints)));
+  button.setAttribute(
+    "aria-label",
+    `Week ${row.week}, recommended ${row.team} ${placeText(row.home, row.opponent)}, ${pctLabel(row.winProb)}, ${proj(row.expectedPoints)} projected points`,
+  );
 }
 
 function gameFor(week, team) {
@@ -175,79 +305,10 @@ function resultBadge(resultText, result) {
   const score = bonus ? resultText.replace(/\s*·\s*Bonus/, "") : resultText;
   const kind = result === "loss" ? "loss" : result === "tie" ? "tie" : "win";
   const wrap = document.createElement("span");
+  wrap.className = "badge-row";
   wrap.append(cell("span", `badge badge-${kind}`, score));
   if (bonus) wrap.append(cell("span", "badge badge-bonus", "Bonus"));
   return wrap;
-}
-
-function finalRow(week) {
-  const tr = document.createElement("tr");
-  tr.className = "pick-row";
-  tr.append(labeledCell("week-num", "Week", padWeek(week.week)));
-  if (!week.pick) {
-    const selection = labeledCell("", "Selection");
-    selection.append(cell("span", "badge badge-miss", "No pick recorded"));
-    tr.append(selection);
-    tr.append(labeledCell("", "Result", "—"));
-    tr.append(labeledCell("points points-loss", "Points", "−25"));
-    return tr;
-  }
-  const selection = labeledCell("", "Selection");
-  selection.append(cell("span", "team-name", week.pick.team));
-  selection.append(document.createElement("br"));
-  selection.append(cell("span", "opponent", week.pick.opponent));
-  tr.append(selection);
-  const result = labeledCell("", "Result");
-  result.append(resultBadge(week.pick.resultText, week.pick.result));
-  tr.append(result);
-  const negative = (week.pick.points ?? 0) < 0;
-  tr.append(labeledCell(negative ? "points points-loss" : "points points-win", "Points", week.pick.pointsText));
-  return tr;
-}
-
-function openRow(week, pick) {
-  const tr = document.createElement("tr");
-  tr.className = "pick-row is-open";
-  tr.id = "current-week-row";
-  tr.append(labeledCell("week-num", "Week", padWeek(week.week)));
-
-  const selection = labeledCell("", "Selection");
-  selection.id = "current-week-cell";
-  const locked = Boolean(pick && kickedOff(week, pick.team));
-  if (!pick) {
-    selection.append(cell("span", "", "No pick yet"));
-    const link = cell("a", "pick-btn", `Choose Week ${week.week} pick`);
-    link.href = "#confidence";
-    selection.append(link);
-  } else {
-    selection.append(cell("span", "team-name", pick.team));
-    selection.append(document.createElement("br"));
-    selection.append(cell("span", "opponent", opponentText(week, pick.team)));
-    if (!locked) {
-      const link = cell("a", "pick-btn pick-btn-quiet", "Change pick");
-      link.href = "#confidence";
-      selection.append(link);
-    }
-  }
-  tr.append(selection);
-
-  if (pick?.result) {
-    const final = week.finals[pick.team];
-    const result = labeledCell("", "Result");
-    result.append(resultBadge(final.resultText || statusText(pick), pick.result));
-    tr.append(result);
-    const negative = (pick.points ?? 0) < 0;
-    tr.append(labeledCell(negative ? "points points-loss" : "points points-win", "Points", final.pointsText || signed(pick.points ?? 0)));
-  } else if (pick) {
-    const result = labeledCell("", "Result");
-    result.append(cell("span", "badge badge-open", "Before kickoff"));
-    tr.append(result);
-    tr.append(labeledCell("points points-muted", "Points", "—"));
-  } else {
-    tr.append(labeledCell("dash", "Result", "—"));
-    tr.append(labeledCell("points points-muted", "Points", "—"));
-  }
-  return tr;
 }
 
 function renderBoard(week, logos, used, pick, saving) {
@@ -372,16 +433,271 @@ function readStored(week, used) {
 
 function paint(state) {
   renderStats(state.season, state.weeks, state.pick);
-  renderWeeks(state.weeks, state.openWeek, state.pick);
+  renderCalendar(state);
   renderBoard(state.openWeek, state.season.logos, state.used, state.pick, state.saving);
   renderUsed(state.weeks);
+  renderPlanner(state);
+  if (state.modalWeek) fillModal(state);
+}
+
+function modalStat(label, value) {
+  const box = cell("div", "modal-stat");
+  box.append(cell("span", "", label), cell("strong", "", value));
+  return box;
+}
+
+function appendMatchup(parent, logos, team, opponent, home) {
+  const row = cell("div", "modal-matchup");
+  const left = logoEl(logos, team, "modal-logo");
+  const right = logoEl(logos, opponent, "modal-logo");
+  if (left) row.append(left);
+  row.append(cell("span", "at", home ? "vs" : "at"));
+  if (right) row.append(right);
+  parent.append(row);
+}
+
+function fillPastModal(state, week, title, body) {
+  if (!week.pick) {
+    title.textContent = "No pick recorded";
+    body.append(cell("p", "modal-why", "This week was left blank, so it scores −25."));
+    return;
+  }
+  title.textContent = week.pick.team;
+  const game = scheduledGame(state.planner, week.week, week.pick.short);
+  const opponent = game ? (game.home === week.pick.short ? game.away : game.home) : null;
+  const home = game ? game.home === week.pick.short : String(week.pick.opponent || "").startsWith("vs");
+  if (opponent) appendMatchup(body, state.season.logos, week.pick.short, opponent, home);
+  body.append(cell("p", "opponent", week.pick.opponent));
+  body.append(cell("p", "hint", kickoffLabel(game?.kickoff)));
+  const badges = cell("div", "tile-badges");
+  badges.append(resultBadge(week.pick.resultText, week.pick.result));
+  body.append(badges);
+  const negative = (week.pick.points ?? 0) < 0;
+  body.append(cell("p", negative ? "tile-points points-loss" : "tile-points points-win", week.pick.pointsText));
+}
+
+function fillFutureModal(state, weekNumber, title, body) {
+  const row = planRowFor(state.planner, state.pick, weekNumber);
+  if (!row?.team) {
+    title.textContent = "Plan unavailable";
+    body.append(cell("p", "modal-why", "This week does not have a recommendation yet."));
+    return;
+  }
+  title.textContent = row.team;
+  body.append(cell("p", "badge badge-plan", "Recommended"));
+  appendMatchup(body, state.season.logos, row.team, row.opponent, row.home);
+  body.append(cell("p", "opponent", placeText(row.home, row.opponent)));
+  body.append(cell("p", "hint", kickoffLabel(row.kickoff)));
+  const stats = cell("div", "modal-stats");
+  stats.append(
+    modalStat("Win chance", pctLabel(row.winProb)),
+    modalStat("Expected margin", proj(row.expectedMargin)),
+    modalStat("Projected points", proj(row.expectedPoints)),
+  );
+  body.append(stats);
+  body.append(cell("p", "modal-why", row.why));
+  if (row.source) body.append(cell("p", "modal-source", row.source));
+}
+
+function renderModalPickers(parent, state) {
+  const { openWeek, used, pick, saving } = state;
+  const locked = Boolean(pick && kickedOff(openWeek, pick.team));
+  parent.append(cell("h3", "modal-pick-title", locked ? "Pick locked" : pick ? "Change pick" : "Make your pick"));
+  if (locked) {
+    parent.append(cell("p", "hint", "Kickoff has passed. This pick can no longer be changed."));
+    return;
+  }
+  const list = cell("div", "modal-picks");
+  const games = [...openWeek.games].sort((a, b) => b.rank - a.rank);
+  for (const game of games) {
+    if (used.has(game.favorite)) continue;
+    const started = kickedOff(openWeek, game.favorite);
+    if (started) continue;
+    const selected = pick?.team === game.favorite;
+    const button = cell("button", selected ? "pick-btn is-selected" : "pick-btn is-quiet");
+    button.type = "button";
+    button.dataset.team = game.favorite;
+    button.disabled = saving !== null;
+    button.textContent = saving === game.favorite ? "Saving…" : selected ? `${game.favorite} · Selected` : `Pick ${game.favorite}`;
+    list.append(button);
+  }
+  parent.append(list);
+}
+
+function fillOpenModal(state, title, body) {
+  const { openWeek, pick, planner, season } = state;
+  const recommended = planRowFor(planner, null, openWeek.week);
+  const lockedRow = pick ? planRowFor(planner, pick, openWeek.week) : null;
+  const lead = pick?.team || recommended?.team;
+  title.textContent = lead || `Week ${openWeek.week}`;
+  if (!pick && recommended?.team) body.append(cell("p", "badge badge-plan", "Recommended"));
+  if (pick && !pick.result) body.append(cell("p", "badge badge-open", "Your pick"));
+  const game = scheduledGame(planner, openWeek.week, lead);
+  const opponent = pick ? (game ? (game.home === pick.team ? game.away : game.home) : null) : recommended?.opponent;
+  const home = pick ? (game ? game.home === pick.team : false) : Boolean(recommended?.home);
+  if (lead && opponent) appendMatchup(body, season.logos, lead, opponent, home);
+  if (pick) body.append(cell("p", "opponent", opponentText(openWeek, pick.team) || placeText(home, opponent)));
+  else if (recommended) body.append(cell("p", "opponent", placeText(recommended.home, recommended.opponent)));
+  body.append(cell("p", "hint", kickoffLabel(game?.kickoff || recommended?.kickoff)));
+  if (pick?.result) {
+    const final = openWeek.finals?.[pick.team];
+    const badges = cell("div", "tile-badges");
+    badges.append(resultBadge(final?.resultText || statusText(pick), pick.result));
+    body.append(badges);
+    body.append(cell("p", (pick.points ?? 0) < 0 ? "tile-points points-loss" : "tile-points points-win", final?.pointsText || signed(pick.points ?? 0)));
+  } else {
+    const row = pick ? lockedRow || recommended : recommended;
+    if (row) {
+      const stats = cell("div", "modal-stats");
+      stats.append(
+        modalStat("Win chance", pctLabel(row.winProb)),
+        modalStat("Expected margin", proj(row.expectedMargin)),
+        modalStat("Projected points", proj(row.expectedPoints)),
+      );
+      body.append(stats);
+      body.append(cell("p", "modal-why", row.why));
+      if (row.source) body.append(cell("p", "modal-source", row.source));
+    }
+  }
+  if (pick && recommended && pick.team !== recommended.team && !pick.result) {
+    body.append(cell("p", "hint", `The open plan would use ${recommended.team} ${placeText(recommended.home, recommended.opponent)} instead.`));
+  }
+  renderModalPickers(body, state);
+}
+
+function fillModal(state) {
+  if (!state.modalWeek) return;
+  const title = document.getElementById("modal-title");
+  const kicker = document.getElementById("modal-kicker");
+  const body = document.getElementById("modal-body");
+  if (!title || !body) return;
+  kicker.textContent = `Week ${padWeek(state.modalWeek)}`;
+  body.replaceChildren();
+  const record = state.weeks.find((week) => week.week === state.modalWeek);
+  if (record?.status === "final") fillPastModal(state, record, title, body);
+  else if (state.openWeek && state.modalWeek === state.openWeek.week) fillOpenModal(state, title, body);
+  else fillFutureModal(state, state.modalWeek, title, body);
+}
+
+function openModal(state, weekNumber, trigger) {
+  state.modalWeek = weekNumber;
+  state.modalTrigger = trigger || null;
+  const root = document.getElementById("pick-modal");
+  root.hidden = false;
+  document.body.classList.add("modal-open");
+  fillModal(state);
+  document.getElementById("modal-close")?.focus();
+}
+
+function closeModal(state) {
+  const root = document.getElementById("pick-modal");
+  if (!root || root.hidden) return;
+  root.hidden = true;
+  document.body.classList.remove("modal-open");
+  const trigger = state.modalTrigger;
+  state.modalWeek = null;
+  state.modalTrigger = null;
+  trigger?.focus();
+}
+
+function renderPlanner(state) {
+  const summary = document.getElementById("planner-summary");
+  const alts = document.getElementById("planner-alts");
+  const sources = document.getElementById("planner-sources");
+  if (!summary || !alts || !sources) return;
+  const { planner, pick, openWeek } = state;
+  alts.replaceChildren();
+  sources.replaceChildren();
+  if (!planner) {
+    summary.textContent = "The season plan could not be loaded.";
+    return;
+  }
+  const scenario = scenarioFor(planner, pick);
+  let total = scenario?.total ?? 0;
+  if (pick?.points != null && scenario) {
+    const row = scenario.weeks.find((item) => item.week === openWeek.week);
+    if (row) total = scenario.total - row.expectedPoints + pick.points;
+  }
+  const lockNote = pick?.team
+    ? ` Week ${openWeek.week} is locked to ${pick.team}.`
+    : ` Week ${openWeek.week} is still open.`;
+  summary.textContent = `${planner.scoringNote || ""}${lockNote} Remaining projection ${proj(total)}.`;
+  for (const alt of planner.alternatives || []) {
+    const card = cell("button", "alt-card");
+    card.type = "button";
+    card.dataset.week = String(openWeek.week);
+    if (alt.recommended) card.classList.add("is-recommended");
+    if (pick?.team === alt.team) card.classList.add("is-yours");
+    card.style.setProperty("--accent", accent(alt.team));
+    const img = logoEl(state.season.logos, alt.team, "tile-logo");
+    if (img) card.append(img);
+    card.append(cell("span", "tile-team", alt.team));
+    card.append(cell("span", "opponent", placeText(alt.home, alt.opponent)));
+    card.append(cell("span", alt.recommended ? "badge badge-plan" : "badge badge-open", alt.recommended ? "Recommended" : "Alternative"));
+    card.append(cell("span", "alt-line", `${pctLabel(alt.winProb)} · ${proj(alt.expectedPoints)} this week · ${proj(alt.seasonTotal)} remaining`));
+    card.append(cell("span", "alt-why", alt.why));
+    card.setAttribute("aria-label", `${alt.team}, ${alt.recommended ? "recommended" : "alternative"} for week ${openWeek.week}`);
+    alts.append(card);
+  }
+  if (pick?.team && !(planner.alternatives || []).some((alt) => alt.team === pick.team)) {
+    alts.append(cell("p", "hint alt-note", `${pick.team} is the saved Week ${openWeek.week} pick, outside these three alternatives. Later weeks move around that choice.`));
+  }
+  if (planner.updated) sources.append(document.createTextNode(`Updated ${kickoffLabel(planner.updated)}. `));
+  for (const source of planner.sources || []) {
+    const link = cell("a", "external", source.label);
+    link.href = source.url;
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    sources.append(link, document.createTextNode(`. ${source.detail} `));
+  }
+  if (planner.model?.note) sources.append(document.createTextNode(planner.model.note));
+}
+
+function chooseTeam(state, button) {
+  const team = button.getAttribute("data-team");
+  const { openWeek, used } = state;
+  if (!team || state.saving) return;
+  if (state.pick && kickedOff(openWeek, state.pick.team)) {
+    showError("Kickoff has passed. This pick can no longer be changed.");
+    return;
+  }
+  if (kickedOff(openWeek, team)) {
+    showError("That team has already kicked off.");
+    return;
+  }
+  const pick = materialize(openWeek, used, team, Date.now());
+  if (!pick) {
+    showError(`That team is not available for Week ${openWeek.week}.`);
+    return;
+  }
+  state.saving = team;
+  showError("");
+  paint(state);
+  try {
+    localStorage.setItem(openWeek.storageKey, JSON.stringify(pick));
+    state.pick = pick;
+    if (button.closest("#confidence")) {
+      document.getElementById("weekly")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  } catch {
+    showError("Unable to save your pick.");
+  } finally {
+    state.saving = null;
+    paint(state);
+  }
 }
 
 async function main() {
   let season;
   let weeks;
+  let planner = null;
   try {
-    ({ season, weeks } = await loadSeason());
+    const loaded = await Promise.all([
+      loadSeason(),
+      fetch("data/planner.json").then((response) => (response.ok ? response.json() : null)).catch(() => null),
+    ]);
+    ({ season, weeks } = loaded[0]);
+    planner = loaded[1];
   } catch {
     showError("Your saved pick is temporarily unavailable.");
     return;
@@ -398,41 +714,53 @@ async function main() {
     weeks,
     openWeek,
     used,
+    planner,
     pick: stored.pick || null,
     saving: null,
+    modalWeek: null,
+    modalTrigger: null,
   };
   if (stored.error) showError(stored.error);
   paint(state);
 
-  document.getElementById("confidence").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-team]");
-    if (!button || state.saving) return;
-    const team = button.getAttribute("data-team");
-    if (state.pick && kickedOff(openWeek, state.pick.team)) {
-      showError("Kickoff has passed. This pick can no longer be changed.");
+  document.body.addEventListener("click", (event) => {
+    if (event.target.closest("#modal-close")) {
+      closeModal(state);
       return;
     }
-    if (kickedOff(openWeek, team)) {
-      showError("That team has already kicked off.");
+    if (event.target.id === "pick-modal") {
+      closeModal(state);
       return;
     }
-    const pick = materialize(openWeek, used, team, Date.now());
-    if (!pick) {
-      showError(`That team is not available for Week ${openWeek.week}.`);
+    const opener = event.target.closest("[data-week]");
+    if (opener && opener.closest("#calendar, #planner-alts")) {
+      openModal(state, Number(opener.dataset.week), opener);
       return;
     }
-    state.saving = team;
-    showError("");
-    paint(state);
-    try {
-      localStorage.setItem(openWeek.storageKey, JSON.stringify(pick));
-      state.pick = pick;
-      document.getElementById("weekly")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    } catch {
-      showError("Unable to save your pick.");
-    } finally {
-      state.saving = null;
-      paint(state);
+    const button = event.target.closest("button[data-team]");
+    if (!button || !button.closest("#confidence, #pick-modal")) return;
+    chooseTeam(state, button);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    const root = document.getElementById("pick-modal");
+    if (!root || root.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeModal(state);
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = [...root.querySelectorAll("button, a[href]")].filter((el) => !el.disabled);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 }
