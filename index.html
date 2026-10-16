@@ -45,65 +45,27 @@
       </section>
     </header>
 
-    <div class="section-head">
-      <h2 id="weekly">Weekly picks</h2>
-    </div>
-    <section class="panel">
-      <div class="table-wrap">
-        <table class="picks-table">
-          <thead>
-            <tr>
-              <th>Week</th>
-              <th>Selection</th>
-              <th>Result</th>
-              <th>Points</th>
-            </tr>
-          </thead>
-          <tbody id="weeks-body">
-            <tr class="pick-row">
-              <td class="week-num" data-label="Week">01</td>
-              <td data-label="Selection"><span class="team-name">Detroit Lions</span><br><span class="opponent">vs. New Orleans Saints</span></td>
-              <td data-label="Result"><span class="badge badge-win">W 31–30 (OT)</span></td>
-              <td class="points points-win" data-label="Points">+1</td>
-            </tr>
-            <tr class="pick-row">
-              <td class="week-num" data-label="Week">02</td>
-              <td data-label="Selection"><span class="team-name">San Francisco 49ers</span><br><span class="opponent">vs. Miami Dolphins</span></td>
-              <td data-label="Result"><span class="badge badge-win">W 35–13</span></td>
-              <td class="points points-win" data-label="Points">+22</td>
-            </tr>
-            <tr class="pick-row">
-              <td class="week-num" data-label="Week">03</td>
-              <td data-label="Selection"><span class="team-name">Kansas City Chiefs</span><br><span class="opponent">vs. Miami Dolphins</span></td>
-              <td data-label="Result"><span class="badge badge-win">W 24–10</span><span class="badge badge-bonus">Bonus</span></td>
-              <td class="points points-win" data-label="Points">+28</td>
-            </tr>
-            <tr class="pick-row">
-              <td class="week-num" data-label="Week">04</td>
-              <td data-label="Selection"><span class="team-name">Baltimore Ravens</span><br><span class="opponent">vs. Tennessee Titans</span></td>
-              <td data-label="Result"><span class="badge badge-win">W 24–18</span></td>
-              <td class="points points-win" data-label="Points">+6</td>
-            </tr>
-            <tr class="pick-row">
-              <td class="week-num" data-label="Week">05</td>
-              <td data-label="Selection"><span class="team-name">Houston Texans</span><br><span class="opponent">vs. Tennessee Titans</span></td>
-              <td data-label="Result"><span class="badge badge-win">W 26–3</span></td>
-              <td class="points points-win" data-label="Points">+23</td>
-            </tr>
-            <tr class="pick-row is-open" id="current-week-row">
-              <td class="week-num" data-label="Week">06</td>
-              <td id="current-week-cell" data-label="Selection">
-                <span>No pick yet</span>
-                <div><a class="pick-btn" href="#confidence">Choose Week 6 pick</a></div>
-              </td>
-              <td data-label="Result"><span class="points points-muted">—</span></td>
-              <td class="points points-muted" data-label="Points">—</td>
-            </tr>
-          </tbody>
-        </table>
+    <section aria-labelledby="weekly">
+      <div class="section-head">
+        <div>
+          <h2 id="weekly">Weekly picks</h2>
+          <p class="hint">Weeks 1–18. Past tiles are results, the open week is your pick, and later tiles are the season plan.</p>
+        </div>
       </div>
+      <div id="calendar" class="calendar" aria-live="polite"></div>
     </section>
     <p id="pick-error" class="alert" hidden></p>
+
+    <section class="planner" aria-labelledby="planner-title">
+      <div class="section-head">
+        <div>
+          <h2 id="planner-title">Season planner</h2>
+          <p id="planner-summary" class="hint">Loading the remaining-season plan…</p>
+        </div>
+      </div>
+      <div id="planner-alts" class="alt-grid"></div>
+      <p id="planner-sources" class="footnote"></p>
+    </section>
 
     <section class="layout">
       <div>
@@ -155,6 +117,16 @@
     </section>
     <p class="footnote">Confidence board uses NFELO model probabilities. Pick and scoring data are saved privately.</p>
   </main>
+  <div id="pick-modal" class="modal-root" hidden>
+    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-bar">
+        <p class="eyebrow" id="modal-kicker">Week</p>
+        <button type="button" class="modal-close" id="modal-close">Close</button>
+      </div>
+      <h2 id="modal-title"></h2>
+      <div id="modal-body"></div>
+    </div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html>
