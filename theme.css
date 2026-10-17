@@ -1018,3 +1018,89 @@ html.lg-svg .theme-switch {
     --blob-amber: rgba(94, 92, 230, 0.2);
   }
 }
+
+/* ==== Unified white liquid glass (site-wide, consistent) ==== */
+:root {
+  --paper: #ececef;
+  --lg-fill: linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.5) 100%);
+  --lg-fill-soft: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.3) 100%);
+  --lg-border: 1px solid rgba(255, 255, 255, 0.95);
+  --lg-rim:
+    inset 0 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.04),
+    inset 0 0 16px rgba(255, 255, 255, 0.6),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.03),
+    0 12px 30px rgba(0, 0, 0, 0.07);
+  --lg-rim-strong:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 1),
+    inset 0 3px 1px rgba(255, 255, 255, 1),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.06),
+    inset 0 0 26px rgba(255, 255, 255, 0.85),
+    0 0 0 0.5px rgba(0, 0, 0, 0.08),
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    0 22px 46px rgba(0, 0, 0, 0.13);
+  --lg-blur: blur(22px) saturate(170%);
+}
+[data-theme="dark"] {
+  --paper: #0b0b0d;
+  --lg-fill: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+  --lg-fill-soft: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  --lg-border: 1px solid rgba(255, 255, 255, 0.14);
+  --lg-rim:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.35),
+    0 12px 30px rgba(0, 0, 0, 0.5);
+  --lg-rim-strong:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    inset 0 2px 1px rgba(255, 255, 255, 0.36),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.4),
+    0 22px 46px rgba(0, 0, 0, 0.65);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --paper: #0b0b0d;
+    --lg-fill: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+    --lg-fill-soft: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    --lg-border: 1px solid rgba(255, 255, 255, 0.14);
+    --lg-rim: inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1.5px 2px rgba(0,0,0,0.35), 0 12px 30px rgba(0,0,0,0.5);
+    --lg-rim-strong: inset 0 0 0 1px rgba(255,255,255,0.28), inset 0 2px 1px rgba(255,255,255,0.36), 0 22px 46px rgba(0,0,0,0.65);
+  }
+}
+
+/* Softer, mostly neutral backdrop like the reference */
+.atmosphere { opacity: 0.55; }
+
+/* Every box */
+.stat, .panel.glass, .match, .tile, .alt-card, .modal-stat, .chip,
+.table-wrap, .modal-close, .pick-btn:not(.is-selected) {
+  background: var(--lg-fill) !important;
+  border: var(--lg-border) !important;
+  box-shadow: var(--lg-rim) !important;
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+}
+.pick-btn:not(.is-selected) { color: var(--blue); }
+
+/* Outer frames: the nested "tray" look */
+#confidence.board, .calendar, .modal-sheet {
+  background: var(--lg-fill-soft) !important;
+  border: var(--lg-border) !important;
+  box-shadow: var(--lg-rim) !important;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.calendar { padding: 16px; margin: 0; border-radius: 32px; }
+#confidence.board { border-radius: 32px; padding: 16px; margin: 0; }
+
+/* Highlighted boxes: thicker, brighter rim instead of color */
+.match.is-selected, .tile.is-yours, .tile.is-recommended,
+.alt-card.is-recommended, .alt-card.is-yours, .stat-feature {
+  box-shadow: var(--lg-rim-strong) !important;
+}
+.tile.is-recommended { transform: none; }
+.match.is-selected, .tile.is-yours { transform: translateY(-2px); }
+.tile:not(.is-yours):not(.is-recommended) { background: var(--lg-fill-soft) !important; }
+
+.stat, .panel.glass, .match, .tile, .alt-card { border-radius: 24px; }
+.modal-stat { border-radius: 18px; }
