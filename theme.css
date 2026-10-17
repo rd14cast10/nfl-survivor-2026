@@ -860,3 +860,82 @@ html.lg-svg .theme-switch {
 @media (max-width: 640px) {
   #confidence.board { padding: 10px; border-radius: 20px; }
 }
+
+/* Liquid glass edges (replaces blue outline ring) */
+:root {
+  --liquid-edge:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.95),
+    inset 0 2px 1px rgba(255, 255, 255, 1),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.05),
+    inset 0 0 14px rgba(255, 255, 255, 0.7),
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 10px 26px rgba(0, 0, 0, 0.07),
+    0 2px 4px rgba(0, 0, 0, 0.04);
+  --liquid-edge-strong:
+    inset 0 0 0 2px rgba(255, 255, 255, 1),
+    inset 0 3px 2px rgba(255, 255, 255, 1),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.06),
+    inset 0 0 22px rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 18px 40px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.05);
+  --liquid-fill: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,246,248,0.82));
+  --ring: var(--liquid-edge-strong);
+}
+[data-theme="dark"] {
+  --liquid-edge:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.22),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35),
+    inset 0 0 14px rgba(255, 255, 255, 0.04),
+    0 10px 28px rgba(0, 0, 0, 0.5);
+  --liquid-edge-strong:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.3),
+    inset 0 2px 1px rgba(255, 255, 255, 0.38),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.4),
+    inset 0 0 22px rgba(255, 255, 255, 0.08),
+    0 18px 40px rgba(0, 0, 0, 0.6);
+  --liquid-fill: linear-gradient(180deg, rgba(58,58,62,0.85), rgba(32,32,35,0.8));
+  --ring: var(--liquid-edge-strong);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --liquid-edge: inset 0 0 0 1px rgba(255,255,255,0.16), inset 0 1.5px 1px rgba(255,255,255,0.22), 0 10px 28px rgba(0,0,0,0.5);
+    --liquid-edge-strong: inset 0 0 0 1.5px rgba(255,255,255,0.3), inset 0 2px 1px rgba(255,255,255,0.38), 0 18px 40px rgba(0,0,0,0.6);
+    --liquid-fill: linear-gradient(180deg, rgba(58,58,62,0.85), rgba(32,32,35,0.8));
+    --ring: var(--liquid-edge-strong);
+  }
+}
+
+#confidence .match {
+  background: var(--liquid-fill);
+  box-shadow: var(--liquid-edge);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+}
+#confidence .match.is-selected,
+.tile.is-recommended, .tile.is-yours,
+.alt-card.is-recommended, .alt-card.is-yours {
+  background: var(--liquid-fill);
+  box-shadow: var(--liquid-edge-strong);
+  transform: translateY(-2px);
+}
+
+/* Board container: thick frosted glass frame instead of thin border */
+#confidence.board {
+  border: none;
+  border-radius: 30px;
+  padding: 16px;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.95),
+    inset 0 3px 2px rgba(255, 255, 255, 0.9),
+    inset 0 0 30px rgba(255, 255, 255, 0.6),
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 20px 50px rgba(0, 0, 0, 0.08);
+}
+[data-theme="dark"] #confidence.board {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 2px 1px rgba(255, 255, 255, 0.18),
+    0 20px 50px rgba(0, 0, 0, 0.6);
+}
