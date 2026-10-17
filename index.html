@@ -2,15 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Raul’s NFL Survivor Dashboard</title>
   <meta name="description" content="Private 2026 NFL Survivor Pool tracker.">
+  <script>
+    (function () {
+      var key = "raul-survivor-theme";
+      function read() {
+        try {
+          var value = localStorage.getItem(key);
+          if (value === "light" || value === "dark" || value === "auto") return value;
+        } catch (error) {}
+        return "auto";
+      }
+      function systemDark() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+      }
+      function apply(mode) {
+        var dark = mode === "dark" || (mode === "auto" && systemDark());
+        var root = document.documentElement;
+        root.setAttribute("data-theme", dark ? "dark" : "light");
+        root.setAttribute("data-theme-mode", mode);
+        root.style.colorScheme = dark ? "dark" : "light";
+      }
+      apply(read());
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+        if (read() === "auto") apply("auto");
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        var group = document.querySelector(".theme-toggle");
+        if (!group) return;
+        function sync() {
+          var mode = read();
+          group.querySelectorAll("[data-mode]").forEach(function (button) {
+            button.setAttribute("aria-checked", button.getAttribute("data-mode") === mode ? "true" : "false");
+          });
+        }
+        sync();
+        group.addEventListener("click", function (event) {
+          var button = event.target.closest("[data-mode]");
+          if (!button) return;
+          var mode = button.getAttribute("data-mode");
+          try { localStorage.setItem(key, mode); } catch (error) {}
+          apply(mode);
+          sync();
+        });
+      });
+    })();
+  </script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="shortcut icon" href="favicon.svg">
   <link rel="stylesheet" href="theme.css">
 </head>
 <body>
   <div class="atmosphere" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <p class="topbar-kicker">2026 NFL Survivor</p>
+      <p class="topbar-title">Raul’s Survivor</p>
+    </div>
+  </header>
+  <div class="theme-toggle" role="radiogroup" aria-label="Color theme">
+    <button type="button" class="theme-opt" role="radio" data-mode="auto">Auto</button>
+    <button type="button" class="theme-opt" role="radio" data-mode="light">Light</button>
+    <button type="button" class="theme-opt" role="radio" data-mode="dark">Dark</button>
+  </div>
   <main class="shell">
     <header class="hero">
       <div class="hero-copy">
@@ -19,22 +75,22 @@
         <p class="lede">One team per week. Every team can be used only once.</p>
       </div>
       <section class="stat-grid" aria-label="Season snapshot">
-        <article class="stat stat-feature">
+        <article class="stat stat-feature lg-card">
           <p class="stat-label">Total points</p>
           <p id="stat-points" class="stat-value">+80</p>
           <p class="stat-note">After completed weeks</p>
         </article>
-        <article class="stat stat-feature">
+        <article class="stat stat-feature lg-card">
           <p class="stat-label">Record</p>
           <p id="stat-record" class="stat-value">5–0</p>
           <p class="stat-note">Survivor record</p>
         </article>
-        <article class="stat">
+        <article class="stat lg-card">
           <p class="stat-label">Teams used</p>
           <p id="stat-used" class="stat-value">5</p>
           <p id="stat-remain" class="stat-note">27 remain eligible</p>
         </article>
-        <article class="stat">
+        <article class="stat lg-card">
           <p class="stat-label">Bonus pick</p>
           <p class="stat-value">Used</p>
           <p class="stat-note">Kansas City · Week 3</p>
@@ -115,7 +171,7 @@
     <p class="footnote">Confidence board uses NFELO model probabilities. Pick and scoring data are saved privately.</p>
   </main>
   <div id="pick-modal" class="modal-root" hidden>
-    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-sheet lg-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal-bar">
         <p class="eyebrow" id="modal-kicker">Week</p>
         <button type="button" class="modal-close" id="modal-close">Close</button>
@@ -124,6 +180,7 @@
       <div id="modal-body"></div>
     </div>
   </div>
+  <script src="glass.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
