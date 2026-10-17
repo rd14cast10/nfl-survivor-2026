@@ -1152,7 +1152,6 @@ html.lg-svg .theme-switch {
   text-shadow: 0 0 6px rgba(200, 230, 255, 0.6);
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   backdrop-filter: blur(14px) saturate(160%);
-  font-weight: 600;
 }
 [data-theme="dark"] .badge-plan, [data-theme="dark"] .badge-bonus,
 [data-theme="dark"] button.pick-btn.is-selected {
