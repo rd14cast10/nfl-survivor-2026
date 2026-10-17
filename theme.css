@@ -1002,3 +1002,19 @@ html.lg-svg .theme-switch {
 @media (max-width: 640px) {
   .calendar { padding: 10px; margin: -10px; }
 }
+
+/* Blue palette for background glows (replaces green/amber) */
+:root {
+  --blob-green: rgba(90, 200, 250, 0.22);
+  --blob-amber: rgba(94, 92, 230, 0.14);
+}
+[data-theme="dark"] {
+  --blob-green: rgba(100, 210, 255, 0.24);
+  --blob-amber: rgba(94, 92, 230, 0.2);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --blob-green: rgba(100, 210, 255, 0.24);
+    --blob-amber: rgba(94, 92, 230, 0.2);
+  }
+}
