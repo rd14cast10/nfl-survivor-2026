@@ -1134,3 +1134,34 @@ html.lg-svg .theme-switch {
     inset 0 -1.5px 2px rgba(0, 20, 60, 0.4),
     0 3px 12px rgba(10, 132, 255, 0.35) !important;
 }
+
+/* Frosted blue glass (glass alarm clock style) */
+.badge-plan, .badge-bonus, button.pick-btn.is-selected {
+  color: #f4f9ff !important;
+  border: 1px solid rgba(190, 220, 255, 0.75) !important;
+  background:
+    radial-gradient(120% 140% at 20% 0%, rgba(170, 210, 255, 0.55), rgba(170, 210, 255, 0) 60%),
+    linear-gradient(160deg, rgba(88, 150, 235, 0.72) 0%, rgba(40, 105, 215, 0.78) 100%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 1px 1px rgba(225, 240, 255, 0.7),
+    inset 0 0 12px rgba(160, 205, 255, 0.45),
+    inset 0 -2px 6px rgba(20, 70, 170, 0.25),
+    0 4px 14px rgba(40, 110, 220, 0.22),
+    0 0 18px rgba(120, 180, 255, 0.18) !important;
+  text-shadow: 0 0 6px rgba(200, 230, 255, 0.6);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  font-weight: 600;
+}
+[data-theme="dark"] .badge-plan, [data-theme="dark"] .badge-bonus,
+[data-theme="dark"] button.pick-btn.is-selected {
+  border-color: rgba(150, 200, 255, 0.5) !important;
+  background:
+    radial-gradient(120% 140% at 20% 0%, rgba(140, 190, 255, 0.35), rgba(140, 190, 255, 0) 60%),
+    linear-gradient(160deg, rgba(60, 120, 220, 0.55) 0%, rgba(25, 80, 190, 0.6) 100%) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(200, 225, 255, 0.45),
+    inset 0 0 12px rgba(120, 180, 255, 0.3),
+    0 0 18px rgba(60, 140, 255, 0.25) !important;
+}
