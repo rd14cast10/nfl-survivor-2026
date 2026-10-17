@@ -661,3 +661,10 @@ body.modal-open { overflow: hidden; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Plain grey panels: no background circle or line art */
+.hero::before, .calendar::before, .alt-grid::before, .panel::before, .modal-sheet::before,
+.hero::after, .calendar::after, .alt-grid::after, .panel::after, .modal-sheet::after {
+  content: none !important;
+  display: none !important;
+}
