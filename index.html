@@ -7,38 +7,30 @@
   <meta name="description" content="Private 2026 NFL Survivor Pool tracker.">
   <script>
     (function () {
-      var key = "raul-survivor-theme";
-      function read() {
-        try {
-          var value = localStorage.getItem(key);
-          if (value === "light" || value === "dark") return value;
-        } catch (error) {}
-        return null;
-      }
-      function systemDark() {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches;
-      }
-      function apply(choice) {
-        var dark = choice === "dark" || (choice !== "light" && systemDark());
+      try { localStorage.removeItem("raul-survivor-theme"); } catch (error) {}
+      var override = null;
+      var media = window.matchMedia("(prefers-color-scheme: dark)");
+      function apply() {
+        var dark = override === "dark" || (override !== "light" && media.matches);
         var root = document.documentElement;
         root.setAttribute("data-theme", dark ? "dark" : "light");
-        root.setAttribute("data-theme-choice", choice || "system");
+        root.setAttribute("data-theme-choice", override || "system");
         root.style.colorScheme = dark ? "dark" : "light";
         var toggle = document.querySelector(".theme-switch");
         if (toggle) toggle.setAttribute("aria-checked", dark ? "true" : "false");
       }
-      apply(read());
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
-        if (!read()) apply(null);
+      apply();
+      media.addEventListener("change", function () {
+        override = null;
+        apply();
       });
       document.addEventListener("DOMContentLoaded", function () {
         var toggle = document.querySelector(".theme-switch");
         if (!toggle) return;
-        apply(read());
+        apply();
         toggle.addEventListener("click", function () {
-          var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-          try { localStorage.setItem(key, next); } catch (error) {}
-          apply(next);
+          override = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          apply();
         });
       });
     })();
