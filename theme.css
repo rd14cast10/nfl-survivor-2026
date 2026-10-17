@@ -129,22 +129,33 @@ body {
   position: sticky;
   top: 0;
   z-index: 30;
+  isolation: isolate;
   min-height: 60px;
   padding: 10px 0;
+  background: transparent;
+}
+
+.topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   background: var(--glass);
   border-bottom: 1px solid var(--glass-stroke);
   box-shadow: var(--glass-shadow);
+  pointer-events: none;
   backdrop-filter: blur(22px) saturate(1.8);
   -webkit-backdrop-filter: blur(22px) saturate(1.8);
 }
 
 .topbar-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
   width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
-  padding-right: 88px;
 }
 
 .topbar-kicker {
@@ -166,13 +177,14 @@ body {
 }
 
 .theme-switch {
-  position: fixed;
-  top: 14px;
-  right: max(16px, env(safe-area-inset-right));
-  z-index: 32;
+  position: relative;
+  flex: none;
+  margin: 0 0 0 auto;
   width: 64px;
   height: 32px;
   padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
   border: 1px solid var(--glass-stroke);
   border-radius: 999px;
   background: var(--glass);
@@ -740,7 +752,7 @@ body.modal-open { overflow: hidden; }
 
 @media (max-width: 720px) {
   .shell { width: min(100% - 32px, 1120px); padding-top: 28px; }
-  .topbar-inner { width: min(100% - 32px, 1120px); padding-right: 84px; }
+  .topbar-inner { width: min(100% - 32px, 1120px); }
   .topbar-kicker { display: none; }
   .stat-grid { grid-template-columns: 1fr 1fr; }
   .layout { grid-template-columns: 1fr; gap: 32px; }
@@ -765,7 +777,7 @@ body.modal-open { overflow: hidden; }
   .calendar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-html.lg-svg .topbar {
+html.lg-svg .topbar::before {
   backdrop-filter: url("#lg-bar");
   -webkit-backdrop-filter: url("#lg-bar");
 }
@@ -787,7 +799,7 @@ html.lg-svg .theme-switch {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
-  .topbar, .stat, .theme-switch, .modal-sheet { background: var(--card); }
+  .topbar::before, .stat, .theme-switch, .modal-sheet { background: var(--card); }
 }
 
 @media (prefers-reduced-motion: reduce) {
