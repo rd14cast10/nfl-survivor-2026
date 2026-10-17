@@ -809,3 +809,20 @@ html.lg-svg .theme-switch {
     scroll-behavior: auto !important;
   }
 }
+
+/* Scrollable confidence board */
+#confidence.board {
+  max-height: min(640px, 72vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 8px 24px;
+  margin: 0 -8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(134, 134, 139, 0.5) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
+}
+#confidence.board::-webkit-scrollbar { width: 6px; }
+#confidence.board::-webkit-scrollbar-thumb { background: rgba(134, 134, 139, 0.5); border-radius: 3px; }
+#confidence.board .match { flex-shrink: 0; }
