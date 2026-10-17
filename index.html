@@ -11,41 +11,34 @@
       function read() {
         try {
           var value = localStorage.getItem(key);
-          if (value === "light" || value === "dark" || value === "auto") return value;
+          if (value === "light" || value === "dark") return value;
         } catch (error) {}
-        return "auto";
+        return null;
       }
       function systemDark() {
         return window.matchMedia("(prefers-color-scheme: dark)").matches;
       }
-      function apply(mode) {
-        var dark = mode === "dark" || (mode === "auto" && systemDark());
+      function apply(choice) {
+        var dark = choice === "dark" || (choice !== "light" && systemDark());
         var root = document.documentElement;
         root.setAttribute("data-theme", dark ? "dark" : "light");
-        root.setAttribute("data-theme-mode", mode);
+        root.setAttribute("data-theme-choice", choice || "system");
         root.style.colorScheme = dark ? "dark" : "light";
+        var toggle = document.querySelector(".theme-switch");
+        if (toggle) toggle.setAttribute("aria-checked", dark ? "true" : "false");
       }
       apply(read());
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
-        if (read() === "auto") apply("auto");
+        if (!read()) apply(null);
       });
       document.addEventListener("DOMContentLoaded", function () {
-        var group = document.querySelector(".theme-toggle");
-        if (!group) return;
-        function sync() {
-          var mode = read();
-          group.querySelectorAll("[data-mode]").forEach(function (button) {
-            button.setAttribute("aria-checked", button.getAttribute("data-mode") === mode ? "true" : "false");
-          });
-        }
-        sync();
-        group.addEventListener("click", function (event) {
-          var button = event.target.closest("[data-mode]");
-          if (!button) return;
-          var mode = button.getAttribute("data-mode");
-          try { localStorage.setItem(key, mode); } catch (error) {}
-          apply(mode);
-          sync();
+        var toggle = document.querySelector(".theme-switch");
+        if (!toggle) return;
+        apply(read());
+        toggle.addEventListener("click", function () {
+          var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          try { localStorage.setItem(key, next); } catch (error) {}
+          apply(next);
         });
       });
     })();
@@ -62,11 +55,18 @@
       <p class="topbar-title">Raul’s Survivor</p>
     </div>
   </header>
-  <div class="theme-toggle" role="radiogroup" aria-label="Color theme">
-    <button type="button" class="theme-opt" role="radio" data-mode="auto">Auto</button>
-    <button type="button" class="theme-opt" role="radio" data-mode="light">Light</button>
-    <button type="button" class="theme-opt" role="radio" data-mode="dark">Dark</button>
-  </div>
+  <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Dark mode">
+    <svg class="theme-icon theme-sun" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </g>
+    </svg>
+    <svg class="theme-icon theme-moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M15.5 3.1a8.5 8.5 0 1 0 5.4 12.8A7 7 0 0 1 15.5 3.1z"></path>
+    </svg>
+    <span class="theme-knob" aria-hidden="true"></span>
+  </button>
   <main class="shell">
     <header class="hero">
       <div class="hero-copy">
