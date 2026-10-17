@@ -404,6 +404,26 @@ function materialize(week, used, team, updatedAt) {
   };
 }
 
+const CLOUD_URL = "https://zpkrbojtjcuubtjktzat.supabase.co";
+const CLOUD_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpwa3Jib2p0amN1dWJ0amt0emF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMjIyMTQsImV4cCI6MjEwNzc5ODIxNH0.eV_VQ6cMZHgzid-a8LUMyCOch4L2KdIzJpFky6ELHp0";
+const cloudHeaders = { apikey: CLOUD_KEY, Authorization: `Bearer ${CLOUD_KEY}`, "Content-Type": "application/json" };
+
+async function cloudRead(weekNumber) {
+  const response = await fetch(`${CLOUD_URL}/rest/v1/picks?week=eq.${weekNumber}&select=team,updated_at`, { headers: cloudHeaders, cache: "no-store" });
+  if (!response.ok) throw new Error("cloud read failed");
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
+async function cloudSave(weekNumber, team) {
+  const response = await fetch(`${CLOUD_URL}/rest/v1/rpc/save_pick`, {
+    method: "POST",
+    headers: cloudHeaders,
+    body: JSON.stringify({ p_week: weekNumber, p_team: team }),
+  });
+  if (!response.ok) throw new Error("cloud save failed");
+}
+
 function readStored(week, used) {
   let raw;
   try {
@@ -653,7 +673,7 @@ function renderPlanner(state) {
   if (planner.model?.note) sources.append(document.createTextNode(planner.model.note));
 }
 
-function chooseTeam(state, button) {
+async function chooseTeam(state, button) {
   const team = button.getAttribute("data-team");
   const { openWeek, used } = state;
   if (!team || state.saving) return;
@@ -674,13 +694,14 @@ function chooseTeam(state, button) {
   showError("");
   paint(state);
   try {
-    localStorage.setItem(openWeek.storageKey, JSON.stringify(pick));
+    try { localStorage.setItem(openWeek.storageKey, JSON.stringify(pick)); } catch {}
+    await cloudSave(openWeek.week, team);
     state.pick = pick;
     if (button.closest("#confidence")) {
       document.getElementById("weekly")?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   } catch {
-    showError("Unable to save your pick.");
+    showError("Couldn't save your pick online. Check your connection and tap it again.");
   } finally {
     state.saving = null;
     paint(state);
@@ -708,7 +729,21 @@ async function main() {
     return;
   }
   const used = usedShortNames(weeks);
-  const stored = readStored(openWeek, used);
+  let stored = readStored(openWeek, used);
+  try {
+    const remote = await cloudRead(openWeek.week);
+    if (remote?.team) {
+      const pick = materialize(openWeek, used, remote.team, Date.parse(remote.updated_at) || Date.now());
+      if (pick) {
+        stored = { pick };
+        try { localStorage.setItem(openWeek.storageKey, JSON.stringify(pick)); } catch {}
+      }
+    } else if (stored.pick) {
+      cloudSave(openWeek.week, stored.pick.team).catch(() => {});
+    }
+  } catch {
+    /* offline: fall back to this device's saved pick */
+  }
   const state = {
     season,
     weeks,
