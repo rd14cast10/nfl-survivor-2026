@@ -1181,3 +1181,37 @@ html.lg-svg .theme-switch {
     inset 0 0 12px rgba(120, 180, 255, 0.28),
     0 4px 14px rgba(60, 140, 255, 0.22) !important;
 }
+
+/* Refined glossy blue liquid glass pills */
+.badge-plan, .badge-bonus, button.pick-btn.is-selected {
+  color: #ffffff !important;
+  border: 1px solid rgba(160, 205, 255, 0.9) !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(90% 55% at 50% 0%, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.18) 55%, rgba(255,255,255,0) 72%),
+    radial-gradient(70% 45% at 50% 108%, rgba(170,225,255,0.55) 0%, rgba(170,225,255,0) 70%),
+    linear-gradient(180deg, #5eb0ff 0%, #2f86f6 52%, #1f6fe6 100%) !important;
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(10, 60, 160, 0.25),
+    0 2px 6px rgba(31, 111, 230, 0.22),
+    0 8px 20px rgba(31, 111, 230, 0.16) !important;
+  text-shadow: 0 1px 1.5px rgba(10, 60, 150, 0.35) !important;
+  -webkit-backdrop-filter: saturate(160%) !important;
+  backdrop-filter: saturate(160%) !important;
+  overflow: hidden;
+}
+button.pick-btn.is-selected:hover { filter: brightness(1.05); }
+[data-theme="dark"] .badge-plan, [data-theme="dark"] .badge-bonus,
+[data-theme="dark"] button.pick-btn.is-selected {
+  border-color: rgba(140, 195, 255, 0.7) !important;
+  box-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.75),
+    inset 0 -1px 1px rgba(0, 30, 90, 0.4),
+    0 4px 16px rgba(30, 120, 255, 0.35) !important;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) .badge-plan, html:not([data-theme]) .badge-bonus {
+    box-shadow: inset 0 1px 0.5px rgba(255,255,255,0.75), 0 4px 16px rgba(30,120,255,0.35) !important;
+  }
+}
