@@ -826,3 +826,37 @@ html.lg-svg .theme-switch {
 #confidence.board::-webkit-scrollbar { width: 6px; }
 #confidence.board::-webkit-scrollbar-thumb { background: rgba(134, 134, 139, 0.5); border-radius: 3px; }
 #confidence.board .match { flex-shrink: 0; }
+
+/* Outlined scroll container for confidence board */
+#confidence.board {
+  margin: 0;
+  padding: 14px 14px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 24px;
+  -webkit-mask-image: none;
+  mask-image: none;
+  background:
+    linear-gradient(#ebebef, rgba(235,235,239,0)) top / 100% 28px no-repeat local,
+    linear-gradient(rgba(235,235,239,0), #ebebef) bottom / 100% 28px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.14), transparent) top / 100% 14px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.14), transparent) bottom / 100% 14px no-repeat scroll,
+    #ebebef;
+}
+[data-theme="dark"] #confidence.board {
+  border-color: rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(#111113, rgba(17,17,19,0)) top / 100% 28px no-repeat local,
+    linear-gradient(rgba(17,17,19,0), #111113) bottom / 100% 28px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(255,255,255,0.14), transparent) top / 100% 14px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(255,255,255,0.14), transparent) bottom / 100% 14px no-repeat scroll,
+    #111113;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) #confidence.board {
+    border-color: rgba(255, 255, 255, 0.16);
+    background: #111113;
+  }
+}
+@media (max-width: 640px) {
+  #confidence.board { padding: 10px; border-radius: 20px; }
+}
