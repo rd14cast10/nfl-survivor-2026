@@ -1466,20 +1466,7 @@ html.lg-svg .topbar::before {
    Monochrome glass, one big "balance" card, capsule section chips,
    light-weight display numbers, transaction-row planner cards.
    Everything is scoped to the Home panel; delete this block to revert. */
-.tab-panel[data-panel="home"] {
-  --hf-chip: rgba(255, 255, 255, 0.72);
-  --hf-chip-border: rgba(255, 255, 255, 0.95);
-  --hf-chip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05);
-  --hf-sub: rgba(255, 255, 255, 0.66);
-  --hf-sub-border: rgba(255, 255, 255, 0.9);
-}
-[data-theme="dark"] .tab-panel[data-panel="home"] {
-  --hf-chip: rgba(255, 255, 255, 0.07);
-  --hf-chip-border: rgba(255, 255, 255, 0.12);
-  --hf-chip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 18px rgba(0, 0, 0, 0.45);
-  --hf-sub: rgba(255, 255, 255, 0.06);
-  --hf-sub-border: rgba(255, 255, 255, 0.1);
-}
+/* --hf-* chip variables now live in the site-wide block at the end */
 
 /* Hero: capsule eyebrow, lighter display title */
 .tab-panel[data-panel="home"] .hero { margin-bottom: 48px; }
@@ -1674,3 +1661,311 @@ html.lg-svg .topbar::before {
   .tab-panel[data-panel="home"] .stat:nth-child(2) { padding: 9px 16px !important; }
   .tab-panel[data-panel="home"] .tile, .tab-panel[data-panel="home"] .alt-card { border-radius: 26px; }
 }
+
+/* ==== Site-wide Figma "Liquid Glass Fintech" look + OLED dark mode ====
+   Extends the Home trial to every tab, the top bar, the tab bar, the theme
+   switch and the week popup. Dark mode is true black with smoky glass. */
+:root {
+  --hf-chip: rgba(255, 255, 255, 0.72);
+  --hf-chip-border: rgba(255, 255, 255, 0.95);
+  --hf-chip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05);
+  --hf-sub: rgba(255, 255, 255, 0.66);
+  --hf-sub-border: rgba(255, 255, 255, 0.9);
+  --hf-bar: rgba(236, 236, 239, 0.72);
+  --hf-hairline: rgba(0, 0, 0, 0.06);
+  --hf-fill-bar: linear-gradient(90deg, #a1a1a6, #6e6e73);
+  --hf-track: rgba(0, 0, 0, 0.07);
+  --hf-sheet: linear-gradient(180deg, rgba(248, 248, 250, 0.86), rgba(238, 238, 241, 0.8));
+  --hf-modal-bar: rgba(246, 246, 248, 0.78);
+  --hf-knob: linear-gradient(180deg, #ffffff, #f0f0f3);
+  --hf-tile-done: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.6));
+  --hf-tile-open: rgba(214, 214, 220, 0.62);
+  --veil: rgba(0, 0, 0, 0.32);
+}
+
+/* OLED dark: pure black page, smoky glass, thin light rims */
+[data-theme="dark"] {
+  --paper: #000000;
+  --ink: #f5f5f7;
+  --heading: #f5f5f7;
+  --muted: #8e8e93;
+  --card: #0c0c0d;
+  --elevated: #262628;
+  --glass: rgba(0, 0, 0, 0.72);
+  --glass-stroke: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.12);
+  --glass-shadow: none;
+  --veil: rgba(0, 0, 0, 0.78);
+  --lg-fill: linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.04) 100%);
+  --lg-fill-soft: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.025) 100%);
+  --lg-border: 1px solid rgba(255, 255, 255, 0.11);
+  --lg-rim:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.05),
+    0 10px 30px rgba(0, 0, 0, 0.6);
+  --lg-rim-strong:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
+    0 18px 40px rgba(0, 0, 0, 0.75);
+  --lg-edge: rgba(255, 255, 255, 0.07);
+  --lg-spec-hi: rgba(255, 255, 255, 0.34);
+  --lg-spec-mid: rgba(255, 255, 255, 0.06);
+  --lg-spec-lo: rgba(255, 255, 255, 0.18);
+  --lg-sheen: rgba(255, 255, 255, 0.05);
+  --lg-glow: rgba(255, 255, 255, 0.07);
+  --hf-chip: rgba(255, 255, 255, 0.07);
+  --hf-chip-border: rgba(255, 255, 255, 0.12);
+  --hf-chip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 6px 18px rgba(0, 0, 0, 0.5);
+  --hf-sub: rgba(255, 255, 255, 0.055);
+  --hf-sub-border: rgba(255, 255, 255, 0.1);
+  --hf-bar: rgba(0, 0, 0, 0.72);
+  --hf-hairline: rgba(255, 255, 255, 0.08);
+  --hf-fill-bar: linear-gradient(90deg, rgba(255,255,255,0.42), rgba(255,255,255,0.78));
+  --hf-track: rgba(255, 255, 255, 0.08);
+  --hf-sheet: linear-gradient(180deg, rgba(16, 16, 18, 0.9), rgba(6, 6, 7, 0.92));
+  --hf-modal-bar: rgba(8, 8, 9, 0.78);
+  --hf-knob: linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0.16));
+  --hf-tile-done: linear-gradient(180deg, rgba(255,255,255,0.17), rgba(255,255,255,0.1));
+  --hf-tile-open: rgba(255, 255, 255, 0.025);
+}
+[data-theme="dark"] .matchup img { background: rgba(255, 255, 255, 0.12); }
+html[data-theme="dark"], [data-theme="dark"] body { background: #000; }
+[data-theme="dark"] .atmosphere { display: none !important; }
+
+/* Top bar: translucent band, title in the design's medium weight */
+.topbar::before {
+  background: var(--hf-bar) !important;
+  border-bottom: 1px solid var(--hf-hairline) !important;
+  box-shadow: none !important;
+}
+.topbar-title { font-weight: 600; letter-spacing: -0.025em; }
+.topbar-kicker { font-weight: 500; letter-spacing: 0.04em; }
+
+/* Tab bar: glass capsule nav, active tab a grey inner pill with blue text */
+.tabbar-pill {
+  background: var(--hf-chip) !important;
+  border: 1px solid var(--hf-chip-border) !important;
+  box-shadow: var(--hf-chip-shadow) !important;
+}
+.tabbar .tab { font-size: 15px; font-weight: 500; padding: 8px 20px; }
+.tabbar .tab.is-active {
+  background: var(--elevated);
+  border: 1px solid var(--hf-sub-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+[data-theme="dark"] .tabbar .tab.is-active { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+
+/* Theme switch: glass capsule with a pill knob (no white circle) */
+.theme-switch {
+  background: var(--hf-chip) !important;
+  border: 1px solid var(--hf-chip-border) !important;
+  box-shadow: var(--hf-chip-shadow) !important;
+}
+.theme-knob {
+  width: 30px;
+  border-radius: 999px;
+  background: var(--hf-knob);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.14);
+}
+[data-theme="dark"] .theme-knob {
+  transform: translateX(28px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 0 0 0.5px rgba(255, 255, 255, 0.2);
+}
+
+/* Page titles (NFELO, Other) match the Home hero title */
+.board-page-title, .tab-title {
+  font-weight: 500 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.04;
+}
+.nfelo-page .section-head .hint { font-size: 15px; }
+
+/* Capsule chips: section titles on Other, the live-board link, popup kicker */
+.other-grid h2, .modal-pick-title {
+  display: table;
+  margin: 0 auto 14px;
+  padding: 9px 20px;
+  border-radius: 999px;
+  background: var(--hf-chip);
+  border: 1px solid var(--hf-chip-border);
+  box-shadow: var(--hf-chip-shadow);
+  font-size: 17px !important;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.modal-pick-title { margin: 28px auto 6px; }
+.modal-pick-title + .hint { text-align: center; font-size: 14px; }
+.nfelo-page .external, .modal-bar .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--hf-chip);
+  border: 1px solid var(--hf-chip-border);
+  box-shadow: var(--hf-chip-shadow);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.modal-bar .eyebrow { color: var(--heading); letter-spacing: 0; text-transform: none; }
+
+/* NFELO match cards */
+.match { border-radius: 28px !important; padding: 18px 20px; }
+.match-rank {
+  font-weight: 500 !important;
+  letter-spacing: -0.04em !important;
+  font-variant-numeric: tabular-nums;
+}
+.matchup { font-weight: 500; }
+.matchup img {
+  background: var(--hf-sub);
+  border: 1px solid var(--hf-sub-border);
+  border-radius: 10px;
+}
+.confidence-bar { height: 5px; background: var(--hf-track); }
+.confidence-bar-fill { background: var(--hf-fill-bar); }
+.match-prob strong {
+  font-weight: 500 !important;
+  letter-spacing: -0.04em !important;
+  font-variant-numeric: tabular-nums;
+}
+.match-prob span { font-weight: 500; letter-spacing: 0.04em; }
+.match .status-note {
+  display: inline-flex;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--hf-sub);
+  border: 1px solid var(--hf-sub-border);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Pick buttons: soft "Request" capsule; selected is the grey pill with blue text */
+button.pick-btn.is-quiet, .pick-btn:not(.is-selected) {
+  background: var(--hf-chip) !important;
+  border: 1px solid var(--hf-chip-border) !important;
+  box-shadow: var(--hf-chip-shadow) !important;
+  color: var(--blue) !important;
+  font-weight: 500;
+}
+button.pick-btn.is-selected,
+[data-theme="dark"] button.pick-btn.is-selected {
+  color: var(--blue) !important;
+  background: var(--elevated) !important;
+  border: 1px solid var(--hf-sub-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  text-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  font-weight: 600;
+}
+[data-theme="dark"] button.pick-btn.is-selected { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important; }
+.pick-btn { font-size: 15px; }
+/* Grey pills with blue text in dark too */
+[data-theme="dark"] .badge-plan, [data-theme="dark"] .badge-bonus {
+  background: var(--elevated) !important;
+  border: 1px solid var(--hf-sub-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  padding: 3px 8px !important;
+  border-radius: 999px !important;
+}
+
+/* Other tab */
+.other-grid { gap: 28px; }
+.other-grid .panel.glass { border-radius: 30px; padding: 22px 22px 24px; }
+.other-grid .panel.glass > .hint { text-align: center; font-size: 14px; }
+.chips { justify-content: center; }
+.chip {
+  background: var(--hf-chip) !important;
+  border: 1px solid var(--hf-chip-border) !important;
+  box-shadow: var(--hf-chip-shadow) !important;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.bonus-kicker { font-weight: 500; letter-spacing: 0.04em; }
+.bonus-value {
+  margin: 10px 0 10px;
+  font-size: clamp(54px, 9vw, 64px) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+.bonus-copy, .rules { font-size: 15px; line-height: 1.55; }
+.rules strong { font-weight: 600; }
+
+/* Footnotes centered and small, like Home */
+.nfelo-page > .footnote, .other-page .footnote {
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Week popup */
+.modal-root { background: var(--veil); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.modal-sheet {
+  background: var(--hf-sheet) !important;
+  border: var(--lg-border) !important;
+  box-shadow: var(--lg-rim-strong) !important;
+  border-radius: 32px;
+}
+.modal-bar {
+  background: var(--hf-modal-bar);
+  border-bottom: 1px solid var(--hf-hairline);
+}
+.modal-close {
+  min-height: 38px;
+  padding: 0 18px;
+  background: var(--hf-chip) !important;
+  border: 1px solid var(--hf-chip-border) !important;
+  box-shadow: var(--hf-chip-shadow) !important;
+  font-size: 15px;
+  font-weight: 500;
+}
+.modal-sheet h2 {
+  font-weight: 500 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.04;
+  margin-top: 6px;
+}
+.modal-logo {
+  border-radius: 26px;
+  background: var(--hf-sub);
+  border: 1px solid var(--hf-sub-border);
+  box-shadow: var(--hf-chip-shadow);
+}
+.modal-stat {
+  border-radius: 22px !important;
+  background: var(--hf-sub) !important;
+  border: 1px solid var(--hf-sub-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+[data-theme="dark"] .modal-stat { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important; }
+.modal-stat span { font-weight: 500; letter-spacing: 0.04em; }
+.modal-stat strong {
+  font-weight: 500 !important;
+  font-size: 24px;
+  letter-spacing: -0.035em !important;
+  font-variant-numeric: tabular-nums;
+}
+.modal-why { font-size: 15px; line-height: 1.55; }
+@media (max-width: 720px) {
+  .modal-sheet { border-radius: 0; border-left: 0 !important; border-right: 0 !important; }
+}
+
+/* Week tiles: completed is the brighter glass, open/future the dimmer grey (both themes) */
+#calendar .tile.is-past { background: var(--hf-tile-done) !important; }
+#calendar .tile:not(.is-past) { background: var(--hf-tile-open) !important; }
+[data-theme="dark"] #calendar .tile:not(.is-past) { background: var(--hf-tile-open) !important; }
+[data-theme="dark"] .tab-panel[data-panel="home"] .stat-grid { background: var(--lg-fill); }
