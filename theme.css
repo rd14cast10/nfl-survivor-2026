@@ -1461,3 +1461,216 @@ html.lg-svg .topbar::before {
   .stat::before, .panel.glass::before, .match::before, .tile::before,
   .alt-card::before, .tabbar-pill::before, .board-link::before { display: none; }
 }
+
+/* ==== Home tab: Figma "Liquid Glass Fintech App" look (trial, Home only) ====
+   Monochrome glass, one big "balance" card, capsule section chips,
+   light-weight display numbers, transaction-row planner cards.
+   Everything is scoped to the Home panel; delete this block to revert. */
+.tab-panel[data-panel="home"] {
+  --hf-chip: rgba(255, 255, 255, 0.72);
+  --hf-chip-border: rgba(255, 255, 255, 0.95);
+  --hf-chip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05);
+  --hf-sub: rgba(255, 255, 255, 0.66);
+  --hf-sub-border: rgba(255, 255, 255, 0.9);
+}
+[data-theme="dark"] .tab-panel[data-panel="home"] {
+  --hf-chip: rgba(255, 255, 255, 0.07);
+  --hf-chip-border: rgba(255, 255, 255, 0.12);
+  --hf-chip-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 18px rgba(0, 0, 0, 0.45);
+  --hf-sub: rgba(255, 255, 255, 0.06);
+  --hf-sub-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Hero: capsule eyebrow, lighter display title */
+.tab-panel[data-panel="home"] .hero { margin-bottom: 48px; }
+.tab-panel[data-panel="home"] .hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--hf-chip);
+  border: 1px solid var(--hf-chip-border);
+  box-shadow: var(--hf-chip-shadow);
+  color: var(--heading);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.tab-panel[data-panel="home"] .hero h1 {
+  margin-top: 18px;
+  font-size: clamp(40px, 6vw, 60px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+}
+.tab-panel[data-panel="home"] .hero .lede { font-size: 17px; margin-top: 10px; }
+
+/* Stats: one "account balance" glass card */
+.tab-panel[data-panel="home"] .stat-grid {
+  grid-template-columns: 1fr !important;
+  gap: 18px;
+  max-width: 640px;
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 32px;
+  background: var(--lg-fill);
+  border: var(--lg-border);
+  box-shadow: var(--lg-rim-strong);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+}
+.tab-panel[data-panel="home"] .stat {
+  padding: 0;
+  border: 0 !important;
+  border-radius: 0;
+  background: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  transform: none !important;
+}
+.tab-panel[data-panel="home"] .stat::before,
+.tab-panel[data-panel="home"] .stat::after { display: none !important; }
+.tab-panel[data-panel="home"] .stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.tab-panel[data-panel="home"] .stat:first-child .stat-value {
+  margin-top: 10px;
+  font-size: clamp(54px, 9vw, 72px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+.tab-panel[data-panel="home"] .stat:first-child .stat-note { margin-top: 10px; font-size: 14px; }
+/* Record becomes the pill row under the balance, like Send / Request */
+.tab-panel[data-panel="home"] .stat:nth-child(2) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px !important;
+  border-radius: 999px;
+  background: var(--hf-sub) !important;
+  border: 1px solid var(--hf-sub-border) !important;
+  box-shadow: var(--hf-chip-shadow) !important;
+}
+.tab-panel[data-panel="home"] .stat:nth-child(2) .stat-value {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.tab-panel[data-panel="home"] .stat:nth-child(2) .stat-note { margin: 0 0 0 auto; font-size: 13px; }
+
+/* Section headings: centered capsule chips, as in "Transaction History" */
+.tab-panel[data-panel="home"] .section-head {
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 22px;
+}
+.tab-panel[data-panel="home"] .section-head > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tab-panel[data-panel="home"] .section-head h2 {
+  display: inline-flex;
+  padding: 9px 20px;
+  border-radius: 999px;
+  background: var(--hf-chip);
+  border: 1px solid var(--hf-chip-border);
+  box-shadow: var(--hf-chip-shadow);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.tab-panel[data-panel="home"] .section-head .hint {
+  max-width: 34rem;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.tab-panel[data-panel="home"] .planner { margin-top: 56px; }
+
+/* Calendar: no outer tray, cards sit on the page like the transaction list */
+.tab-panel[data-panel="home"] .calendar {
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0;
+  gap: 12px;
+}
+.tab-panel[data-panel="home"] .calendar::before,
+.tab-panel[data-panel="home"] .calendar::after { display: none !important; }
+.tab-panel[data-panel="home"] .tile,
+.tab-panel[data-panel="home"] .alt-card { border-radius: 28px; }
+.tab-panel[data-panel="home"] .tile-week { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; }
+.tab-panel[data-panel="home"] .tile-team { font-size: 15px; font-weight: 500; letter-spacing: -0.015em; }
+.tab-panel[data-panel="home"] .tile-points {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+/* Positive amounts read neutral like the design; losses stay red, W/L stays on the result pill */
+.tab-panel[data-panel="home"] .tile-points.points-win,
+.tab-panel[data-panel="home"] .alt-line { color: var(--heading); }
+/* Open week and your pick keep the stronger glass rim */
+.tab-panel[data-panel="home"] .tile.is-open,
+.tab-panel[data-panel="home"] .tile.is-yours,
+.tab-panel[data-panel="home"] .alt-card.is-yours,
+.tab-panel[data-panel="home"] .alt-card.is-recommended { box-shadow: var(--lg-rim-strong) !important; }
+.tab-panel[data-panel="home"] .tile:not(.is-open):not(.is-yours).is-recommended { box-shadow: var(--lg-rim) !important; }
+.tab-panel[data-panel="home"] .tile.is-recommended::after { padding: 1.5px; }
+
+/* Planner: transaction-row cards, logo left and details right */
+.tab-panel[data-panel="home"] .alt-grid { gap: 12px; }
+.tab-panel[data-panel="home"] .alt-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: 14px;
+  row-gap: 4px;
+  align-content: start;
+  justify-items: start;
+  padding: 18px 20px;
+}
+.tab-panel[data-panel="home"] .alt-card > * { grid-column: 2; }
+.tab-panel[data-panel="home"] .alt-card > .tile-logo {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  width: 40px;
+  height: 40px;
+  align-self: start;
+}
+.tab-panel[data-panel="home"] .alt-card .tile-team { font-size: 16px; }
+.tab-panel[data-panel="home"] .alt-card .opponent { color: var(--muted); font-size: 13px; }
+.tab-panel[data-panel="home"] .alt-card .badge { margin: 4px 0 2px; }
+.tab-panel[data-panel="home"] .alt-line { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tab-panel[data-panel="home"] .alt-why { font-size: 13px; }
+.tab-panel[data-panel="home"] .alt-note { text-align: center; }
+
+.tab-panel[data-panel="home"] > .footnote {
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .tab-panel[data-panel="home"] .hero { text-align: left; }
+  .tab-panel[data-panel="home"] .stat-grid { padding: 22px 20px 20px; border-radius: 30px; }
+  .tab-panel[data-panel="home"] .stat:nth-child(2) { padding: 9px 16px !important; }
+  .tab-panel[data-panel="home"] .tile, .tab-panel[data-panel="home"] .alt-card { border-radius: 26px; }
+}
