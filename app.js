@@ -382,8 +382,10 @@ function renderStats(season, weeks, pick) {
     weeks.filter((week) => week.status === "final" && week.pick).length + (pick ? 1 : 0);
   document.getElementById("stat-points").textContent = signed(total);
   document.getElementById("stat-record").textContent = recordText(weeks, pick);
-  document.getElementById("stat-used").textContent = String(usedCount);
-  document.getElementById("stat-remain").textContent = `${season.teamCount - usedCount} remain eligible`;
+  const usedEl = document.getElementById("stat-used");
+  if (usedEl) usedEl.textContent = String(usedCount);
+  const remainEl = document.getElementById("stat-remain");
+  if (remainEl) remainEl.textContent = `${season.teamCount - usedCount} remain eligible`;
 }
 
 function materialize(week, used, team, updatedAt) {
