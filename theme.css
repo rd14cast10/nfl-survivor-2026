@@ -2015,3 +2015,9 @@ button.pick-btn.is-selected,
   #confidence.board-full { max-width: 640px; margin-left: auto !important; margin-right: auto !important; }
   #confidence .match > .min-w-0 { grid-template-columns: minmax(170px, 1fr) minmax(90px, 0.8fr) 170px !important; column-gap: 14px !important; }
 }
+@media (min-width: 700px) {
+  #confidence.board-full { max-width: 720px; }
+  .nfelo-page .section-head, .nfelo-page > .footnote { max-width: 720px; margin-left: auto !important; margin-right: auto !important; }
+  #confidence .match > .min-w-0 { grid-template-columns: minmax(200px, 1.5fr) minmax(70px, 0.6fr) auto !important; }
+  #confidence .match .pick-btn { white-space: nowrap; }
+}
