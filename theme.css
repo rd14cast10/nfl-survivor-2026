@@ -1987,3 +1987,23 @@ button.pick-btn.is-selected,
 .matchup-rows .team-row .at { text-align: right; font-size: 12px; }
 .matchup-rows .team-row .record { margin-left: 2px; }
 .matchup-rows img { width: 34px !important; height: 34px !important; }
+
+/* iPad / wide screens: compact one-row game cards on the NFELO board */
+@media (min-width: 700px) {
+  #confidence .match {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    align-items: center !important;
+  }
+  #confidence .match > .min-w-0 {
+    display: grid;
+    grid-template-columns: minmax(200px, 1.1fr) minmax(140px, 1fr) auto;
+    align-items: center;
+    column-gap: 20px;
+  }
+  #confidence .match .matchup.matchup-rows { gap: 4px; }
+  #confidence .match .matchup-rows img { width: 28px !important; height: 28px !important; }
+  #confidence .match .confidence-bar { margin-top: 0 !important; }
+  #confidence .match > .min-w-0 > div:last-child { margin-top: 0 !important; justify-self: end; }
+  #confidence .match .pick-btn { margin-top: 0 !important; }
+}
