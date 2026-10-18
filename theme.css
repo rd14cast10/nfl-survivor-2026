@@ -1259,3 +1259,6 @@ button.pick-btn.is-selected {
 }
 #confidence.board.board-full::before,
 #confidence.board.board-full::after { display: none !important; }
+
+/* Two stat cards only */
+.stat-grid { grid-template-columns: 1fr 1fr !important; }
