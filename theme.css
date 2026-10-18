@@ -1295,3 +1295,10 @@ button.pick-btn.is-selected {
 }
 .tab-empty { padding: 48px 0 80px; }
 .tab-empty h1 { margin: 0 0 8px; }
+
+/* Home board column now full width; Other tab cards */
+.layout { grid-template-columns: 1fr !important; }
+.other-page { padding: 32px 0 48px; }
+.tab-title { margin: 0 0 20px; }
+.other-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+@media (max-width: 900px) { .other-grid { grid-template-columns: 1fr; } }
