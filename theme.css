@@ -2025,3 +2025,6 @@ button.pick-btn.is-selected,
 /* Total points card at the bottom of Home */
 .home-stats { margin: 40px 0 24px; }
 .home-stats .stat-grid { margin-top: 0 !important; }
+
+/* Home without hero title: space under the tab bar */
+.tab-panel[data-panel="home"] > section:first-child { margin-top: 28px; }
