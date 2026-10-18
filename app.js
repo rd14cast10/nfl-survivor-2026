@@ -312,6 +312,7 @@ function resultBadge(resultText, result) {
 }
 
 function renderBoard(week, logos, used, pick, saving) {
+  if (!document.getElementById("confidence")) return;
   document.getElementById("board-title").textContent = `Week ${week.week} confidence board`;
   const root = document.getElementById("confidence");
   root.replaceChildren();
@@ -451,12 +452,30 @@ function readStored(week, used) {
   return { pick };
 }
 
+function safely(fn) {
+  try { fn(); } catch (error) { /* section not on this page */ }
+}
+
+function renderBoardLink(state) {
+  const link = document.getElementById("board-link");
+  if (!link) return;
+  const week = state.openWeek;
+  const games = [...week.games].sort((a, b) => b.rank - a.rank);
+  const top = games[0];
+  document.getElementById("board-link-title").textContent = `Week ${week.week} confidence board`;
+  document.getElementById("board-link-pick").textContent = state.pick ? `Your pick: ${state.pick.team}` : "No pick yet";
+  document.getElementById("board-link-meta").textContent = top
+    ? `${games.length} games · Top pick ${top.favorite}, ${top.winsPer100} wins per 100`
+    : `${games.length} games`;
+}
+
 function paint(state) {
-  renderStats(state.season, state.weeks, state.pick);
-  renderCalendar(state);
-  renderBoard(state.openWeek, state.season.logos, state.used, state.pick, state.saving);
-  renderUsed(state.weeks);
-  renderPlanner(state);
+  safely(() => renderStats(state.season, state.weeks, state.pick));
+  safely(() => renderCalendar(state));
+  safely(() => renderBoard(state.openWeek, state.season.logos, state.used, state.pick, state.saving));
+  safely(() => renderBoardLink(state));
+  safely(() => renderUsed(state.weeks));
+  safely(() => renderPlanner(state));
   if (state.modalWeek) fillModal(state);
 }
 

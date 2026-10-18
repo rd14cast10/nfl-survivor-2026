@@ -1202,3 +1202,47 @@ button.pick-btn.is-selected {
   backdrop-filter: none !important;
   font-weight: 600;
 }
+
+/* Home: single liquid glass box that opens the full board page */
+.board-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 26px 26px 26px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--lg-fill);
+  border: var(--lg-border);
+  box-shadow: var(--lg-rim-strong);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.board-link:hover { transform: translateY(-3px); }
+.board-link:active { transform: scale(0.99); }
+.board-link-text { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.board-link-kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.board-link-title { font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: var(--heading); line-height: 1.15; }
+.board-link-pick { font-size: 17px; font-weight: 600; color: var(--blue); }
+.board-link-meta { font-size: 14px; color: var(--muted); }
+.board-link-arrow {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--blue);
+  background: var(--elevated);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* Full board page */
+.board-page { padding-top: 24px; padding-bottom: 48px; }
+.back-link { display: inline-block; margin: 8px 0 18px; color: var(--blue); text-decoration: none; font-size: 15px; font-weight: 500; }
+.board-page-title { font-size: clamp(32px, 6vw, 48px); margin: 0 0 6px; }
+#confidence.board.board-full { max-height: none; overflow: visible; }
