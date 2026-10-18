@@ -2021,3 +2021,7 @@ button.pick-btn.is-selected,
   #confidence .match > .min-w-0 { grid-template-columns: minmax(200px, 1.5fr) minmax(70px, 0.6fr) auto !important; }
   #confidence .match .pick-btn { white-space: nowrap; }
 }
+
+/* Total points card at the bottom of Home */
+.home-stats { margin: 40px 0 24px; }
+.home-stats .stat-grid { margin-top: 0 !important; }
