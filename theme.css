@@ -1302,3 +1302,5 @@ button.pick-btn.is-selected {
 .tab-title { margin: 0 0 20px; }
 .other-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
 @media (max-width: 900px) { .other-grid { grid-template-columns: 1fr; } }
+
+.nfelo-page { padding: 32px 0 48px; }
