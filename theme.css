@@ -1181,3 +1181,14 @@ html.lg-svg .theme-switch {
     inset 0 0 12px rgba(120, 180, 255, 0.28),
     0 4px 14px rgba(60, 140, 255, 0.22) !important;
 }
+
+/* Blue pills match the grey "Your pick" pill, with blue text */
+.badge-plan, .badge-bonus {
+  color: var(--blue) !important;
+  background: var(--elevated) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+  text-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
