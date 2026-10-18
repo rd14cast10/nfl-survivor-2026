@@ -2009,3 +2009,9 @@ button.pick-btn.is-selected,
 }
 
 @media (min-width: 700px) { #confidence .match > .min-w-0 { grid-template-columns: minmax(200px, 1.1fr) minmax(140px, 1fr) 190px !important; } }
+
+/* iPad / wide: narrower centered NFELO board */
+@media (min-width: 700px) {
+  #confidence.board-full { max-width: 640px; margin-left: auto !important; margin-right: auto !important; }
+  #confidence .match > .min-w-0 { grid-template-columns: minmax(170px, 1fr) minmax(90px, 0.8fr) 170px !important; column-gap: 14px !important; }
+}
