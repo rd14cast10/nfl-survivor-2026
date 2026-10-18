@@ -316,6 +316,10 @@ function renderBoard(week, logos, used, pick, saving) {
   document.getElementById("board-title").textContent = `Week ${week.week} confidence board`;
   const root = document.getElementById("confidence");
   root.replaceChildren();
+  appendBoardGames(root, week, logos, used, pick, saving);
+}
+
+function appendBoardGames(root, week, logos, used, pick, saving) {
   const locked = Boolean(pick && kickedOff(week, pick.team));
   const games = [...week.games].sort((a, b) => b.rank - a.rank);
   const topRank = games[0]?.rank;
@@ -543,26 +547,13 @@ function fillFutureModal(state, weekNumber, title, body) {
 function renderModalPickers(parent, state) {
   const { openWeek, used, pick, saving } = state;
   const locked = Boolean(pick && kickedOff(openWeek, pick.team));
-  parent.append(cell("h3", "modal-pick-title", locked ? "Pick locked" : pick ? "Change pick" : "Make your pick"));
-  if (locked) {
-    parent.append(cell("p", "hint", "Kickoff has passed. This pick can no longer be changed."));
-    return;
-  }
-  const list = cell("div", "modal-picks");
-  const games = [...openWeek.games].sort((a, b) => b.rank - a.rank);
-  for (const game of games) {
-    if (used.has(game.favorite)) continue;
-    const started = kickedOff(openWeek, game.favorite);
-    if (started) continue;
-    const selected = pick?.team === game.favorite;
-    const button = cell("button", selected ? "pick-btn is-selected" : "pick-btn is-quiet");
-    button.type = "button";
-    button.dataset.team = game.favorite;
-    button.disabled = saving !== null;
-    button.textContent = saving === game.favorite ? "Saving…" : selected ? `${game.favorite} · Selected` : `Pick ${game.favorite}`;
-    list.append(button);
-  }
-  parent.append(list);
+  parent.append(cell("h3", "modal-pick-title", `Week ${openWeek.week} NFELO confidence board`));
+  parent.append(cell("p", "hint", locked
+    ? "Kickoff has passed. This pick can no longer be changed."
+    : "Tap an eligible projected winner to save your pick."));
+  const board = cell("div", "board modal-board");
+  appendBoardGames(board, openWeek, state.season.logos, used, pick, saving);
+  parent.append(board);
 }
 
 function fillOpenModal(state, title, body) {

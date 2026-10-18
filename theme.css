@@ -1315,3 +1315,7 @@ button.pick-btn.is-selected {
 [data-theme="dark"] #calendar .tile:not(.is-past) {
   background: rgba(70, 70, 76, 0.55) !important;
 }
+
+/* Full NFELO board inside the open-week popup */
+.modal-board { display: grid; gap: 12px; margin-top: 12px; background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; max-height: none !important; overflow: visible !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.modal-board::before, .modal-board::after { display: none !important; }
