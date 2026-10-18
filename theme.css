@@ -2009,3 +2009,34 @@ button.pick-btn.is-selected,
 }
 
 @media (min-width: 700px) { #confidence .match > .min-w-0 { grid-template-columns: minmax(200px, 1.1fr) minmax(140px, 1fr) 190px !important; } }
+
+/* iPad / wide: half-height game cards, both teams on one line */
+@media (min-width: 700px) {
+  #confidence { gap: 8px !important; }
+  #confidence .match {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    min-height: 0 !important;
+    border-radius: 20px !important;
+  }
+  #confidence .match .matchup.matchup-rows {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  #confidence .match .matchup-rows .team-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #confidence .match .matchup-rows .team-row:first-child .at { display: none; }
+  #confidence .match .matchup-rows .team-row .at { text-align: left; }
+  #confidence .match .matchup-rows img { width: 24px !important; height: 24px !important; padding: 2px !important; }
+  #confidence .match > .min-w-0 { grid-template-columns: minmax(300px, 1.4fr) minmax(120px, 1fr) 190px !important; }
+  #confidence .match .match-rank { font-size: 22px !important; }
+  #confidence .match .match-prob strong { font-size: 22px !important; line-height: 1 !important; }
+  #confidence .match .match-prob span { font-size: 10px !important; }
+  #confidence .match .pick-btn,
+  #confidence .match .status-note { padding-top: 5px !important; padding-bottom: 5px !important; min-height: 0 !important; }
+}
