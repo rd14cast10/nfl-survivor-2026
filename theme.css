@@ -777,23 +777,6 @@ body.modal-open { overflow: hidden; }
   .calendar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-html.lg-svg .topbar::before {
-  backdrop-filter: url("#lg-bar");
-  -webkit-backdrop-filter: url("#lg-bar");
-}
-html.lg-svg .stat {
-  backdrop-filter: url("#lg-card");
-  -webkit-backdrop-filter: url("#lg-card");
-}
-html.lg-svg .modal-sheet {
-  backdrop-filter: url("#lg-sheet");
-  -webkit-backdrop-filter: url("#lg-sheet");
-}
-html.lg-svg .theme-switch {
-  backdrop-filter: url("#lg-pill");
-  -webkit-backdrop-filter: url("#lg-pill");
-}
-
 @media (prefers-reduced-transparency: reduce) {
   .topbar, .stat, .theme-switch, .modal-sheet, .modal-bar, .pick-btn, .modal-close {
     backdrop-filter: none;
@@ -1319,3 +1302,162 @@ button.pick-btn.is-selected {
 /* Full NFELO board inside the open-week popup */
 .modal-board { display: grid; gap: 12px; margin-top: 12px; background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; max-height: none !important; overflow: visible !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 .modal-board::before, .modal-board::after { display: none !important; }
+
+/* ==== Liquid Glass refinement (ported from rdev/liquid-glass-react) ====
+   1. Gradient rim + specular sheen that catch light, angled by --lg-tilt (pointer).
+   2. Elastic hover/press via the individual scale/translate properties, so the
+      existing transform rules (lifted picks, hover lift) keep working.
+   3. Saturation boost behind the glass (their `saturation` prop).
+   Works the same in Safari/WebKit; glass.js adds SVG refraction on Chromium only. */
+:root {
+  --lg-blur: blur(22px) saturate(185%);
+  --lg-blur-lite: blur(14px) saturate(160%);
+  --lg-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --lg-edge: rgba(255, 255, 255, 0.5);
+  --lg-spec-hi: rgba(255, 255, 255, 1);
+  --lg-spec-mid: rgba(255, 255, 255, 0.4);
+  --lg-spec-lo: rgba(255, 255, 255, 0.9);
+  --lg-spec-shade: rgba(255, 255, 255, 0.12);
+  --lg-sheen: rgba(255, 255, 255, 0.5);
+  --lg-glow: rgba(255, 255, 255, 0.55);
+}
+[data-theme="dark"] {
+  --lg-blur: blur(24px) saturate(160%);
+  --lg-edge: rgba(255, 255, 255, 0.08);
+  --lg-spec-hi: rgba(255, 255, 255, 0.42);
+  --lg-spec-mid: rgba(255, 255, 255, 0.07);
+  --lg-spec-lo: rgba(255, 255, 255, 0.24);
+  --lg-spec-shade: rgba(255, 255, 255, 0);
+  --lg-sheen: rgba(255, 255, 255, 0.07);
+  --lg-glow: rgba(255, 255, 255, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --lg-blur: blur(24px) saturate(160%);
+    --lg-edge: rgba(255, 255, 255, 0.08);
+    --lg-spec-hi: rgba(255, 255, 255, 0.42);
+    --lg-spec-mid: rgba(255, 255, 255, 0.07);
+    --lg-spec-lo: rgba(255, 255, 255, 0.24);
+    --lg-spec-shade: rgba(255, 255, 255, 0);
+    --lg-sheen: rgba(255, 255, 255, 0.07);
+    --lg-glow: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Big glass surfaces that get the rim, sheen and elastic motion */
+.stat, .panel.glass, .match, .tile, .alt-card, .tabbar-pill, .board-link {
+  position: relative;
+  isolation: isolate;
+  border-color: var(--lg-edge) !important;
+}
+.stat::after, .panel.glass::after, .match::after, .tile::after,
+.alt-card::after, .tabbar-pill::after, .board-link::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: linear-gradient(
+    calc(135deg + var(--lg-tilt, 0deg)),
+    var(--lg-spec-hi) 0%,
+    var(--lg-spec-mid) 28%,
+    var(--lg-spec-shade) 50%,
+    var(--lg-spec-mid) 72%,
+    var(--lg-spec-lo) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+/* Specular sheen on the surface, under the content; follows the pointer when there is one */
+.stat::before, .panel.glass::before, .match::before, .tile::before,
+.alt-card::before, .tabbar-pill::before, .board-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(160px circle at var(--lg-px, 50%) var(--lg-py, -40%), var(--lg-glow), transparent 70%),
+    linear-gradient(calc(160deg + var(--lg-tilt, 0deg)), var(--lg-sheen) 0%, transparent 38%);
+  opacity: 0.9;
+  transition: opacity 240ms ease;
+}
+/* Highlighted boxes (open week, your pick) keep the thicker, brighter rim */
+.match.is-selected::after, .tile.is-yours::after, .tile.is-recommended::after,
+.alt-card.is-recommended::after, .alt-card.is-yours::after, .stat-feature::after {
+  padding: 2.5px;
+}
+
+/* Elastic motion */
+.stat, .panel.glass, .match, .tile, .alt-card, .board-link {
+  scale: var(--lg-sx, 1) var(--lg-sy, 1);
+  translate: var(--lg-tx, 0px) var(--lg-ty, 0px);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    scale 420ms var(--lg-spring),
+    translate 420ms var(--lg-spring);
+}
+.tile:active, .alt-card:active, .board-link:active {
+  scale: 0.975;
+  transition-duration: 180ms, 180ms, 120ms, 120ms;
+}
+button.pick-btn, .tabbar .tab, .modal-close {
+  transition: background 160ms ease, color 160ms ease, scale 360ms var(--lg-spring);
+}
+button.pick-btn:not(:disabled):active, .tabbar .tab:active, .modal-close:active {
+  scale: 0.95;
+  transition-duration: 160ms, 160ms, 110ms;
+}
+@media (hover: hover) and (pointer: fine) {
+  button.pick-btn:not(:disabled):hover, .tabbar .tab:hover, .modal-close:hover { scale: 1.03; }
+  button.pick-btn:not(:disabled):active, .tabbar .tab:active, .modal-close:active { scale: 0.95; }
+  .tile:hover::before, .alt-card:hover::before, .match:hover::before,
+  .board-link:hover::before, .stat:hover::before { opacity: 1; }
+}
+
+/* Saturation boost behind the glass; small boxes nested inside glass stay light (no second blur) */
+.stat, .panel.glass, .match, .tile, .alt-card, .table-wrap, .tabbar-pill, .board-link {
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+}
+.pick-btn:not(.is-selected), .chip, .modal-stat, .modal-board .match {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.modal-sheet {
+  -webkit-backdrop-filter: blur(30px) saturate(185%);
+  backdrop-filter: blur(30px) saturate(185%);
+}
+
+/* Chromium SVG refraction: glass.js sizes a filter to each element and sets --lg-filter */
+html.lg-svg .stat, html.lg-svg .tabbar-pill, html.lg-svg .theme-switch, html.lg-svg .modal-sheet {
+  -webkit-backdrop-filter: var(--lg-filter, var(--lg-blur));
+  backdrop-filter: var(--lg-filter, var(--lg-blur));
+}
+html.lg-svg .topbar::before {
+  -webkit-backdrop-filter: var(--lg-filter, blur(22px) saturate(1.8));
+  backdrop-filter: var(--lg-filter, blur(22px) saturate(1.8));
+}
+
+/* Board tray stays off on the NFELO tab and in the popup */
+#confidence.board.board-full::before, #confidence.board.board-full::after,
+.modal-board::before, .modal-board::after { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat, .panel.glass, .match, .tile, .alt-card, .board-link,
+  button.pick-btn, .tabbar .tab, .modal-close,
+  .tile:active, .alt-card:active, .board-link:active,
+  button.pick-btn:active, .tabbar .tab:active, .modal-close:active {
+    scale: none !important;
+    translate: none !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .stat::before, .panel.glass::before, .match::before, .tile::before,
+  .alt-card::before, .tabbar-pill::before, .board-link::before { display: none; }
+}
