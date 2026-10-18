@@ -1304,3 +1304,14 @@ button.pick-btn.is-selected {
 @media (max-width: 900px) { .other-grid { grid-template-columns: 1fr; } }
 
 .nfelo-page { padding: 32px 0 48px; }
+
+/* Weeks not yet complete: light grey; completed weeks stay white glass */
+#calendar .tile:not(.is-past) {
+  background: rgba(214, 214, 220, 0.62) !important;
+}
+#calendar .tile.is-past {
+  background: var(--lg-fill) !important;
+}
+[data-theme="dark"] #calendar .tile:not(.is-past) {
+  background: rgba(70, 70, 76, 0.55) !important;
+}
