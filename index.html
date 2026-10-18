@@ -58,8 +58,16 @@
     <span class="theme-knob" aria-hidden="true"></span>
       </button>
     </div>
+    <nav class="tabbar" aria-label="Sections">
+      <div class="tabbar-pill" role="tablist">
+        <a class="tab is-active" href="#home" data-tab="home" aria-current="page">Home</a>
+        <a class="tab" href="#nfelo" data-tab="nfelo">NFELO</a>
+        <a class="tab" href="#other" data-tab="other">Other</a>
+      </div>
+    </nav>
   </header>
   <main class="shell">
+   <div class="tab-panel" data-panel="home">
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">2026 NFL Survivor Pool</p>
@@ -157,6 +165,19 @@
     </section>
     <p class="footnote">Confidence board uses NFELO model probabilities. Your pick is saved online, so it shows on every device.</p>
       <p id="planner-sources" class="footnote"></p>
+   </div>
+   <div class="tab-panel" data-panel="nfelo" hidden>
+     <section class="tab-empty">
+       <h1>NFELO</h1>
+       <p class="hint">Nothing here yet.</p>
+     </section>
+   </div>
+   <div class="tab-panel" data-panel="other" hidden>
+     <section class="tab-empty">
+       <h1>Other</h1>
+       <p class="hint">Nothing here yet.</p>
+     </section>
+   </div>
   </main>
   <div id="pick-modal" class="modal-root" hidden>
     <div class="modal-sheet lg-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">

@@ -822,3 +822,23 @@ async function main() {
 }
 
 main();
+
+
+// Top tab bar: Home / NFELO / Other (index page only switches panels)
+(function setupTabs() {
+  const panels = document.querySelectorAll(".tab-panel");
+  if (!panels.length) return;
+  const tabs = document.querySelectorAll(".tabbar .tab");
+  const show = () => {
+    let key = (location.hash || "#home").slice(1);
+    if (![...panels].some((p) => p.dataset.panel === key)) key = "home";
+    panels.forEach((p) => { p.hidden = p.dataset.panel !== key; });
+    tabs.forEach((t) => {
+      const on = t.dataset.tab === key;
+      t.classList.toggle("is-active", on);
+      if (on) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current");
+    });
+  };
+  window.addEventListener("hashchange", () => { show(); window.scrollTo({ top: 0 }); });
+  show();
+})();

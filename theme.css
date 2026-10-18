@@ -1262,3 +1262,36 @@ button.pick-btn.is-selected {
 
 /* Two stat cards only */
 .stat-grid { grid-template-columns: 1fr 1fr !important; }
+
+/* Top tab bar, Apple TV / iPad style */
+.tabbar { position: relative; z-index: 1; display: flex; justify-content: center; padding: 10px 16px 2px; }
+.tabbar-pill {
+  display: inline-flex;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  background: var(--lg-fill);
+  border: var(--lg-border);
+  box-shadow: var(--lg-rim);
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+}
+.tabbar .tab {
+  padding: 8px 20px;
+  border-radius: 999px;
+  color: var(--heading);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease;
+}
+.tabbar .tab:hover { background: rgba(127, 127, 127, 0.08); }
+.tabbar .tab.is-active {
+  color: var(--blue);
+  font-weight: 600;
+  background: var(--elevated);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.tab-empty { padding: 48px 0 80px; }
+.tab-empty h1 { margin: 0 0 8px; }
