@@ -2007,3 +2007,5 @@ button.pick-btn.is-selected,
   #confidence .match > .min-w-0 > div:last-child { margin-top: 0 !important; justify-self: end; }
   #confidence .match .pick-btn { margin-top: 0 !important; }
 }
+
+@media (min-width: 700px) { #confidence .match > .min-w-0 { grid-template-columns: minmax(200px, 1.1fr) minmax(140px, 1fr) 190px !important; } }
