@@ -1969,3 +1969,21 @@ button.pick-btn.is-selected,
 #calendar .tile:not(.is-past) { background: var(--hf-tile-open) !important; }
 [data-theme="dark"] #calendar .tile:not(.is-past) { background: var(--hf-tile-open) !important; }
 [data-theme="dark"] .tab-panel[data-panel="home"] .stat-grid { background: var(--lg-fill); }
+
+/* Matchup as two tidy rows: [at] [logo] Team record */
+.matchup.matchup-rows { display: grid !important; gap: 8px; flex-wrap: nowrap; }
+.matchup-rows .team-row {
+  display: grid;
+  grid-template-columns: 18px 34px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+}
+.matchup-rows .team-row > span:last-child {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.matchup-rows .team-row .at { text-align: right; font-size: 12px; }
+.matchup-rows .team-row .record { margin-left: 2px; }
+.matchup-rows img { width: 34px !important; height: 34px !important; }

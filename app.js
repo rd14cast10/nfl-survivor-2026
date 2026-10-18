@@ -329,14 +329,12 @@ function appendBoardGames(root, week, logos, used, pick, saving) {
     if (pick?.team === game.favorite) article.classList.add("is-selected");
     article.append(cell("p", "match-rank", String(game.rank)));
     const body = cell("div", "min-w-0");
-    const matchup = cell("div", "matchup");
-    matchup.append(
-      logo(logos, game.away),
-      teamLabel(game.away, game.awayRecord),
-      cell("span", "at", "at"),
-      logo(logos, game.home),
-      teamLabel(game.home, game.homeRecord),
-    );
+    const matchup = cell("div", "matchup matchup-rows");
+    const awayRow = cell("div", "team-row");
+    awayRow.append(cell("span", "at", ""), logo(logos, game.away), teamLabel(game.away, game.awayRecord));
+    const homeRow = cell("div", "team-row");
+    homeRow.append(cell("span", "at", "at"), logo(logos, game.home), teamLabel(game.home, game.homeRecord));
+    matchup.append(awayRow, homeRow);
     const bar = cell("div", "confidence-bar");
     const fill = cell("span", "confidence-bar-fill");
     fill.style.width = `${game.winsPer100}%`;
