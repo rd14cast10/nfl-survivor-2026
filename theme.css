@@ -2028,3 +2028,30 @@ button.pick-btn.is-selected,
 
 /* Home without hero title: space under the tab bar */
 .tab-panel[data-panel="home"] > section:first-child { margin-top: 28px; }
+
+/* Header: no title; matching glass theme switch next to the tab bar */
+.topbar { min-height: 0 !important; padding: 10px 0 !important; }
+.tabbar { align-items: center; gap: 10px; padding: 0 16px !important; }
+.tabbar .theme-switch {
+  margin: 0 !important;
+  width: 92px;
+  height: 52px;
+  background: var(--lg-fill) !important;
+  border: var(--lg-border) !important;
+  box-shadow: var(--lg-rim) !important;
+  -webkit-backdrop-filter: var(--lg-blur);
+  backdrop-filter: var(--lg-blur);
+}
+.tabbar .theme-knob {
+  top: 5px;
+  left: 5px;
+  width: 42px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--elevated);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+[data-theme="dark"] .tabbar .theme-knob { transform: translateX(38px); }
+.tabbar .theme-icon { width: 16px; height: 16px; z-index: 1; }
+.tabbar .theme-sun { left: 18px; }
+.tabbar .theme-moon { right: 18px; }

@@ -42,9 +42,12 @@
 <body>
   <div class="atmosphere" aria-hidden="true"></div>
   <header class="topbar">
-    <div class="topbar-inner">
-      <p class="topbar-kicker">2026 NFL Survivor</p>
-      <p class="topbar-title">Raul’s Survivor</p>
+    <nav class="tabbar" aria-label="Sections">
+      <div class="tabbar-pill" role="tablist">
+        <a class="tab is-active" href="#home" data-tab="home" aria-current="page">Home</a>
+        <a class="tab" href="#nfelo" data-tab="nfelo">NFELO</a>
+        <a class="tab" href="#other" data-tab="other">Other</a>
+      </div>
       <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Dark mode">
     <svg class="theme-icon theme-sun" viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
@@ -57,13 +60,6 @@
     </svg>
     <span class="theme-knob" aria-hidden="true"></span>
       </button>
-    </div>
-    <nav class="tabbar" aria-label="Sections">
-      <div class="tabbar-pill" role="tablist">
-        <a class="tab is-active" href="#home" data-tab="home" aria-current="page">Home</a>
-        <a class="tab" href="#nfelo" data-tab="nfelo">NFELO</a>
-        <a class="tab" href="#other" data-tab="other">Other</a>
-      </div>
     </nav>
   </header>
   <main class="shell">
