@@ -1,9 +1,9 @@
 {
   "season": 2026,
-  "currentWeek": 6,
+  "currentWeek": 7,
   "teamCount": 32,
   "noPickPoints": -25,
-  "weeks": ["01", "02", "03", "04", "05", "06"],
+  "weeks": ["01", "02", "03", "04", "05", "06", "07"],
   "logos": {
     "Arizona": "ari",
     "Atlanta": "atl",

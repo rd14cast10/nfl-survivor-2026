@@ -1,32 +1,14 @@
 {
   "week": 6,
-  "status": "open",
-  "storageKey": "raul-survivor-week-6-pick",
-  "source": "https://www.nfeloapp.com/games/nfl-confidence-picks/",
-  "sourceLabel": "Week 6, 2026",
-  "games": [
-    {"away": "Arizona", "awayAbbrev": "ARI", "awayRecord": "1-4", "home": "L.A. Rams", "homeAbbrev": "LAR", "homeRecord": "2-3", "favorite": "L.A. Rams", "rank": 16, "winsPer100": 87},
-    {"away": "N.Y. Jets", "awayAbbrev": "NYJ", "awayRecord": "2-3", "home": "New England", "homeAbbrev": "NE", "homeRecord": "3-2", "favorite": "New England", "rank": 15, "winsPer100": 76},
-    {"away": "Washington", "awayAbbrev": "WAS", "awayRecord": "1-3", "home": "San Francisco", "homeAbbrev": "SF", "homeRecord": "5-0", "favorite": "San Francisco", "rank": 14, "winsPer100": 76},
-    {"away": "L.A. Chargers", "awayAbbrev": "LAC", "awayRecord": "0-5", "home": "Kansas City", "homeAbbrev": "KC", "homeRecord": "4-0", "favorite": "Kansas City", "rank": 13, "winsPer100": 76},
-    {"away": "Tennessee", "awayAbbrev": "TEN", "awayRecord": "0-5", "home": "Indianapolis", "homeAbbrev": "IND", "homeRecord": "2-3", "favorite": "Indianapolis", "rank": 12, "winsPer100": 75},
-    {"away": "Baltimore", "awayAbbrev": "BAL", "awayRecord": "4-1", "home": "Cleveland", "homeAbbrev": "CLE", "homeRecord": "3-2", "favorite": "Baltimore", "rank": 11, "winsPer100": 69},
-    {"away": "Buffalo", "awayAbbrev": "BUF", "awayRecord": "4-1", "home": "Las Vegas", "homeAbbrev": "OAK", "homeRecord": "3-2", "favorite": "Buffalo", "rank": 10, "winsPer100": 67},
-    {"away": "Pittsburgh", "awayAbbrev": "PIT", "awayRecord": "3-2", "home": "Tampa Bay", "homeAbbrev": "TB", "homeRecord": "1-4", "favorite": "Pittsburgh", "rank": 9, "winsPer100": 59},
-    {"away": "Carolina", "awayAbbrev": "CAR", "awayRecord": "2-2", "home": "Philadelphia", "homeAbbrev": "PHI", "homeRecord": "2-3", "favorite": "Carolina", "rank": 8, "winsPer100": 58},
-    {"away": "Chicago", "awayAbbrev": "CHI", "awayRecord": "3-2", "home": "Atlanta", "homeAbbrev": "ATL", "homeRecord": "2-3", "favorite": "Chicago", "rank": 7, "winsPer100": 56},
-    {"away": "Dallas", "awayAbbrev": "DAL", "awayRecord": "2-3", "home": "Green Bay", "homeAbbrev": "GB", "homeRecord": "3-2", "favorite": "Green Bay", "rank": 6, "winsPer100": 56},
-    {"away": "New Orleans", "awayAbbrev": "NO", "awayRecord": "1-4", "home": "New York Giants", "homeAbbrev": "NYG", "homeRecord": "3-1", "favorite": "New Orleans", "rank": 5, "winsPer100": 56},
-    {"away": "Houston", "awayAbbrev": "HOU", "awayRecord": "1-4", "home": "Jacksonville", "homeAbbrev": "JAX", "homeRecord": "4-1", "favorite": "Jacksonville", "rank": 4, "winsPer100": 53},
-    {"away": "Seattle", "awayAbbrev": "SEA", "awayRecord": "3-2", "home": "Denver", "homeAbbrev": "DEN", "homeRecord": "3-2", "favorite": "Seattle", "rank": 3, "winsPer100": 53}
-  ],
-  "finals": {
-    "Seattle": {
-      "result": "loss",
-      "margin": 3,
-      "resultText": "L 14–17 (OT)",
-      "pointsText": "−6",
-      "note": "Thursday, Oct 15, 2026: Denver 17, Seattle 14 (OT). Kickoff has passed, so Seattle can no longer be chosen. NFELO still lists both teams at 3-2."
-    }
+  "status": "final",
+  "pick": {
+    "team": "Los Angeles Rams",
+    "short": "L.A. Rams",
+    "opponent": "vs. Arizona Cardinals",
+    "resultText": "L 16–18",
+    "pointsText": "−4",
+    "result": "loss",
+    "margin": 2,
+    "points": -4
   }
 }
