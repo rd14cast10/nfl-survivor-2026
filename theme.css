@@ -2055,3 +2055,12 @@ button.pick-btn.is-selected,
 .tabbar .theme-icon { width: 16px; height: 16px; z-index: 1; }
 .tabbar .theme-sun { left: 18px; }
 .tabbar .theme-moon { right: 18px; }
+
+/* Theme switch pinned far right; tabs stay centered */
+.tabbar { position: relative; }
+@media (min-width: 640px) {
+  .tabbar .theme-switch { position: absolute !important; right: 24px; top: 50%; transform: translateY(-50%); }
+}
+@media (max-width: 639px) {
+  .tabbar { justify-content: space-between !important; }
+}
