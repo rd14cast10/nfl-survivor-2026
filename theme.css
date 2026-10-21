@@ -2072,3 +2072,6 @@ button.pick-btn.is-selected,
 .tabbar .theme-icon { width: 13px; height: 13px; }
 .tabbar .theme-sun { left: 10px; }
 .tabbar .theme-moon { right: 10px; }
+
+/* Tighter Total points card */
+.home-stats { max-width: 420px; margin-left: auto !important; margin-right: auto !important; }
