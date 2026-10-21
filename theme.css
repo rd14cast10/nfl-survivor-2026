@@ -2064,3 +2064,11 @@ button.pick-btn.is-selected,
 @media (max-width: 639px) {
   .tabbar { justify-content: space-between !important; }
 }
+
+/* Smaller theme switch */
+.tabbar .theme-switch { width: 62px; height: 34px; }
+.tabbar .theme-knob { top: 3px; left: 3px; width: 28px; height: 26px; }
+[data-theme="dark"] .tabbar .theme-knob { transform: translateX(28px); }
+.tabbar .theme-icon { width: 13px; height: 13px; }
+.tabbar .theme-sun { left: 10px; }
+.tabbar .theme-moon { right: 10px; }
