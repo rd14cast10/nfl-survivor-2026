@@ -671,7 +671,12 @@ def main():
 
     week_ids = list(range(current, REGULAR_SEASON_WEEKS + 1))
     teams = sorted({team for week in week_ids for team in index_options(by_week[week]["games"])})
-    blocked = set(used)
+    # Teams the owner never wants in the forecast (planner only, board unaffected).
+    excluded = [name for name in season.get("plannerExclude") or []]
+    for name in excluded:
+        if name not in logos:
+            raise RuntimeError(f"excluded team {name} is not in season.json")
+    blocked = set(used) | set(excluded)
 
     def lookup(week, team):
         return index_options(by_week[week]["games"]).get(team)
@@ -828,6 +833,7 @@ def main():
         "throughWeek": REGULAR_SEASON_WEEKS,
         "bonusAvailable": bonus_week is None,
         "bonusUsedWeek": bonus_week,
+        "excluded": excluded,
         "model": {
             "family": "normal",
             "sigma": SIGMA,
