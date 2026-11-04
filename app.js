@@ -56,13 +56,13 @@ function teamLabel(name, record) {
 }
 
 async function loadSeason() {
-  const season = await fetch("data/season.json").then((response) => {
+  const season = await fetch("data/season.json", { cache: "no-store" }).then((response) => {
     if (!response.ok) throw new Error("season");
     return response.json();
   });
   const weeks = await Promise.all(
     season.weeks.map(async (id) => {
-      const response = await fetch(`data/weeks/${id}.json`);
+      const response = await fetch(`data/weeks/${id}.json`, { cache: "no-store" });
       if (!response.ok) throw new Error(id);
       return response.json();
     }),
@@ -725,7 +725,7 @@ async function main() {
   try {
     const loaded = await Promise.all([
       loadSeason(),
-      fetch("data/planner.json").then((response) => (response.ok ? response.json() : null)).catch(() => null),
+      fetch("data/planner.json", { cache: "no-store" }).then((response) => (response.ok ? response.json() : null)).catch(() => null),
     ]);
     ({ season, weeks } = loaded[0]);
     planner = loaded[1];
