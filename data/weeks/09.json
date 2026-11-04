@@ -1,0 +1,24 @@
+{
+  "week": 9,
+  "status": "open",
+  "storageKey": "raul-survivor-week-9-pick",
+  "source": "https://www.nfeloapp.com/games/nfl-confidence-picks/",
+  "sourceLabel": "Week 9, 2026",
+  "games": [
+    {"away": "N.Y. Jets", "awayAbbrev": "NYJ", "awayRecord": "2-6", "home": "Kansas City", "homeAbbrev": "KC", "homeRecord": "5-2", "favorite": "Kansas City", "rank": 16, "winsPer100": 82},
+    {"away": "Jacksonville", "awayAbbrev": "JAX", "awayRecord": "5-2", "home": "Baltimore", "homeAbbrev": "BAL", "homeRecord": "4-4", "favorite": "Jacksonville", "rank": 15, "winsPer100": 82},
+    {"away": "Arizona", "awayAbbrev": "ARI", "awayRecord": "3-5", "home": "Seattle", "homeAbbrev": "SEA", "homeRecord": "4-4", "favorite": "Seattle", "rank": 14, "winsPer100": 79},
+    {"away": "Las Vegas", "awayAbbrev": "OAK", "awayRecord": "4-4", "home": "San Francisco", "homeAbbrev": "SF", "homeRecord": "6-1", "favorite": "San Francisco", "rank": 13, "winsPer100": 77},
+    {"away": "Detroit", "awayAbbrev": "DET", "awayRecord": "5-2", "home": "Miami", "homeAbbrev": "MIA", "homeRecord": "1-6", "favorite": "Detroit", "rank": 12, "winsPer100": 75},
+    {"away": "Tampa Bay", "awayAbbrev": "TB", "awayRecord": "3-5", "home": "Chicago", "homeAbbrev": "CHI", "homeRecord": "6-2", "favorite": "Chicago", "rank": 11, "winsPer100": 73},
+    {"away": "Houston", "awayAbbrev": "HOU", "awayRecord": "2-5", "home": "L.A. Chargers", "homeAbbrev": "LAC", "homeRecord": "0-7", "favorite": "Houston", "rank": 10, "winsPer100": 68},
+    {"away": "Cincinnati", "awayAbbrev": "CIN", "awayRecord": "5-2", "home": "Atlanta", "homeAbbrev": "ATL", "homeRecord": "3-5", "favorite": "Cincinnati", "rank": 9, "winsPer100": 68},
+    {"away": "L.A. Rams", "awayAbbrev": "LAR", "awayRecord": "4-4", "home": "Washington", "homeAbbrev": "WAS", "homeRecord": "2-4-1", "favorite": "L.A. Rams", "rank": 8, "winsPer100": 68},
+    {"away": "Cleveland", "awayAbbrev": "CLE", "awayRecord": "5-3", "home": "New Orleans", "homeAbbrev": "NO", "homeRecord": "2-5", "favorite": "New Orleans", "rank": 7, "winsPer100": 66},
+    {"away": "Dallas", "awayAbbrev": "DAL", "awayRecord": "3-5", "home": "Indianapolis", "homeAbbrev": "IND", "homeRecord": "2-6", "favorite": "Dallas", "rank": 6, "winsPer100": 63},
+    {"away": "Buffalo", "awayAbbrev": "BUF", "awayRecord": "6-1", "home": "Minnesota", "homeAbbrev": "MIN", "homeRecord": "6-1", "favorite": "Buffalo", "rank": 5, "winsPer100": 62},
+    {"away": "Green Bay", "awayAbbrev": "GB", "awayRecord": "5-3", "home": "New England", "homeAbbrev": "NE", "homeRecord": "5-3", "favorite": "New England", "rank": 4, "winsPer100": 61},
+    {"away": "Denver", "awayAbbrev": "DEN", "awayRecord": "6-2", "home": "Carolina", "homeAbbrev": "CAR", "homeRecord": "3-4", "favorite": "Denver", "rank": 3, "winsPer100": 59},
+    {"away": "New York Giants", "awayAbbrev": "NYG", "awayRecord": "4-2-1", "home": "Philadelphia", "homeAbbrev": "PHI", "homeRecord": "2-6", "favorite": "New York Giants", "rank": 2, "winsPer100": 57}
+  ]
+}
