@@ -160,15 +160,95 @@ function renderCalendar(state) {
   const root = document.getElementById("calendar");
   if (!root) return;
   root.replaceChildren();
+  root.classList.add("wx");
+  const logos = state.season.logos;
+  const rows = [];
   for (let number = 1; number <= 18; number += 1) {
     const record = state.weeks.find((week) => week.week === number);
-    const button = cell("button", "tile");
+    const row = { number, team: null, caption: "", tone: "", points: null, text: "", kind: "future", label: "" };
+    if (record?.status === "final") {
+      row.kind = "past";
+      if (record.pick) {
+        row.team = record.pick.short;
+        row.caption = (record.pick.resultText || "").replace("–", "-");
+        row.tone = record.pick.result === "loss" ? "loss" : record.pick.result === "win" ? "win" : "";
+        row.points = record.pick.points ?? 0;
+        row.text = record.pick.pointsText;
+        row.label = `Week ${number}, ${record.pick.team}, ${record.pick.resultText}, ${record.pick.pointsText}`;
+      } else {
+        row.caption = "No pick"; row.tone = "loss"; row.points = -25; row.text = "−25";
+        row.label = `Week ${number}, no pick recorded, minus 25`;
+      }
+    } else if (state.openWeek && number === state.openWeek.week) {
+      row.kind = "open";
+      const pick = state.pick;
+      if (pick) {
+        row.team = pick.team;
+        const final = state.openWeek.finals?.[pick.team];
+        if (pick.result) {
+          row.caption = (final?.resultText || statusText(pick)).replace("–", "-");
+          row.tone = pick.result === "loss" ? "loss" : "win";
+          row.points = pick.points ?? 0;
+          row.text = final?.pointsText || signed(pick.points ?? 0);
+        } else {
+          const plan = planRowFor(state.planner, pick, number);
+          row.caption = "Your pick"; row.tone = "plan";
+          if (plan?.team === pick.team) { row.points = plan.expectedPoints; row.text = proj(plan.expectedPoints); row.projected = true; }
+          else row.text = "—";
+        }
+        row.label = `Week ${number}, your pick ${pick.team}`;
+      } else {
+        const plan = planRowFor(state.planner, null, number);
+        row.caption = "Make pick"; row.tone = "make";
+        if (plan?.team) { row.ghost = plan.team; row.points = plan.expectedPoints; row.text = proj(plan.expectedPoints); row.projected = true; }
+        else row.text = "—";
+        row.label = `Week ${number}, make a pick`;
+      }
+    } else {
+      const plan = planRowFor(state.planner, state.pick, number);
+      if (plan?.team) {
+        row.team = plan.team;
+        row.caption = pctLabel(plan.winProb).replace(/[^0-9%]/g, "") || `${Math.round(plan.winProb * 100)}%`;
+        row.tone = "plan";
+        row.points = plan.expectedPoints; row.text = proj(plan.expectedPoints); row.projected = true;
+        row.label = `Week ${number}, recommended ${plan.team} ${placeText(plan.home, plan.opponent)}, ${pctLabel(plan.winProb)}, ${proj(plan.expectedPoints)} projected points`;
+      } else { row.caption = "Planning"; row.text = "—"; row.label = `Week ${number}, recommendation unavailable`; }
+    }
+    rows.push(row);
+  }
+  const max = Math.max(1, ...rows.map((r) => Math.abs(r.points ?? 0)));
+  for (const row of rows) {
+    const button = cell("button", `wx-row is-${row.kind}`);
     button.type = "button";
-    button.dataset.week = String(number);
-    button.append(cell("span", "tile-week", padWeek(number)));
-    if (record?.status === "final") renderPastTile(button, record, state.season.logos);
-    else if (state.openWeek && number === state.openWeek.week) renderOpenTile(button, state.openWeek, state.pick, state.season.logos);
-    else renderFutureTile(button, planRowFor(state.planner, state.pick, number), state.season.logos, number);
+    button.dataset.week = String(row.number);
+    if (row.kind === "open") button.id = "current-week-row";
+    button.append(cell("span", "wx-week", `Wk ${row.number}`));
+    const icon = cell("span", "wx-icon");
+    const logoTeam = row.team || row.ghost;
+    const img = logoTeam ? logoEl(logos, logoTeam, "wx-logo") : null;
+    if (img) { if (!row.team) img.classList.add("is-ghost"); icon.append(img); }
+    else icon.append(cell("span", "wx-logo wx-blank"));
+    icon.append(cell("span", `wx-cap tone-${row.tone || "muted"}`, row.caption));
+    button.append(icon);
+    const track = cell("span", "wx-track");
+    track.append(cell("span", "wx-zero"));
+    if (row.points !== null && row.points !== undefined) {
+      const pct = Math.min(50, (Math.abs(row.points) / max) * 50);
+      const bar = cell("span", `wx-bar ${row.points < 0 ? "neg" : "pos"}${row.projected ? " proj" : ""}`);
+      bar.style.width = `${Math.max(pct, 1.5)}%`;
+      if (row.points < 0) bar.style.right = "50%"; else bar.style.left = "50%";
+      track.append(bar);
+    }
+    if (row.kind === "open") {
+      const dot = cell("span", "wx-dot");
+      const p = row.points ?? 0;
+      dot.style.left = `${50 + Math.max(-50, Math.min(50, (p / max) * 50))}%`;
+      track.append(dot);
+    }
+    button.append(track);
+    const pts = cell("span", `wx-pts${row.projected || row.points === null ? " is-proj" : ""}${!row.projected && (row.points ?? 0) < 0 ? " is-neg" : ""}`, row.text);
+    button.append(pts);
+    button.setAttribute("aria-label", row.label);
     root.append(button);
   }
 }
