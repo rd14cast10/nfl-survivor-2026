@@ -13,11 +13,11 @@
     {"away": "Tampa Bay", "awayAbbrev": "TB", "awayRecord": "3-5", "home": "Chicago", "homeAbbrev": "CHI", "homeRecord": "6-2", "favorite": "Chicago", "rank": 11, "winsPer100": 73},
     {"away": "Houston", "awayAbbrev": "HOU", "awayRecord": "2-5", "home": "L.A. Chargers", "homeAbbrev": "LAC", "homeRecord": "0-7", "favorite": "Houston", "rank": 10, "winsPer100": 68},
     {"away": "Cincinnati", "awayAbbrev": "CIN", "awayRecord": "5-2", "home": "Atlanta", "homeAbbrev": "ATL", "homeRecord": "3-5", "favorite": "Cincinnati", "rank": 9, "winsPer100": 68},
-    {"away": "L.A. Rams", "awayAbbrev": "LAR", "awayRecord": "4-4", "home": "Washington", "homeAbbrev": "WAS", "homeRecord": "2-4-1", "favorite": "L.A. Rams", "rank": 8, "winsPer100": 68},
-    {"away": "Cleveland", "awayAbbrev": "CLE", "awayRecord": "5-3", "home": "New Orleans", "homeAbbrev": "NO", "homeRecord": "2-5", "favorite": "New Orleans", "rank": 7, "winsPer100": 66},
+    {"away": "Cleveland", "awayAbbrev": "CLE", "awayRecord": "5-3", "home": "New Orleans", "homeAbbrev": "NO", "homeRecord": "2-5", "favorite": "New Orleans", "rank": 8, "winsPer100": 66},
+    {"away": "L.A. Rams", "awayAbbrev": "LAR", "awayRecord": "4-4", "home": "Washington", "homeAbbrev": "WAS", "homeRecord": "2-4-1", "favorite": "L.A. Rams", "rank": 7, "winsPer100": 64},
     {"away": "Dallas", "awayAbbrev": "DAL", "awayRecord": "3-5", "home": "Indianapolis", "homeAbbrev": "IND", "homeRecord": "2-6", "favorite": "Dallas", "rank": 6, "winsPer100": 63},
-    {"away": "Buffalo", "awayAbbrev": "BUF", "awayRecord": "6-1", "home": "Minnesota", "homeAbbrev": "MIN", "homeRecord": "6-1", "favorite": "Buffalo", "rank": 5, "winsPer100": 62},
-    {"away": "Green Bay", "awayAbbrev": "GB", "awayRecord": "5-3", "home": "New England", "homeAbbrev": "NE", "homeRecord": "5-3", "favorite": "New England", "rank": 4, "winsPer100": 61},
+    {"away": "Green Bay", "awayAbbrev": "GB", "awayRecord": "5-3", "home": "New England", "homeAbbrev": "NE", "homeRecord": "5-3", "favorite": "New England", "rank": 5, "winsPer100": 63},
+    {"away": "Buffalo", "awayAbbrev": "BUF", "awayRecord": "6-1", "home": "Minnesota", "homeAbbrev": "MIN", "homeRecord": "6-1", "favorite": "Buffalo", "rank": 4, "winsPer100": 62},
     {"away": "Denver", "awayAbbrev": "DEN", "awayRecord": "6-2", "home": "Carolina", "homeAbbrev": "CAR", "homeRecord": "3-4", "favorite": "Denver", "rank": 3, "winsPer100": 59},
     {"away": "New York Giants", "awayAbbrev": "NYG", "awayRecord": "4-2-1", "home": "Philadelphia", "homeAbbrev": "PHI", "homeRecord": "2-6", "favorite": "New York Giants", "rank": 2, "winsPer100": 57}
   ]
