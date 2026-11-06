@@ -309,32 +309,44 @@ h2 {
   height: 10px;
   margin: 0;
   border-radius: 999px;
-  background: #d5d5d5;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(226, 238, 250, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 0 0 1px rgba(168, 190, 212, 0.28);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  backdrop-filter: blur(12px) saturate(1.3);
   pointer-events: none;
+  overflow: hidden;
 }
-[data-theme="dark"] .wx-track { background: #3a3a3c; }
-.wx-zero {
-  display: block;
-  position: absolute;
-  left: 50%;
-  top: -4px;
-  bottom: -4px;
-  width: 2px;
-  background: rgba(0, 0, 0, 0.45);
+[data-theme="dark"] .wx-track {
+  border-color: rgba(198, 216, 234, 0.22);
+  background: rgba(14, 20, 30, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
-[data-theme="dark"] .wx-zero { background: rgba(255, 255, 255, 0.7); }
+.wx-zero { display: none; }
 .wx-bar {
   display: block;
   position: absolute;
   top: 0;
   bottom: 0;
   border-radius: 999px;
+  -webkit-backdrop-filter: blur(10px) saturate(1.25);
+  backdrop-filter: blur(10px) saturate(1.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
-.wx-bar.pos { background: #6d7b66; }
-.wx-bar.neg { background: #9a6d69; }
+.wx-bar.pos {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(109, 123, 102, 0.62) 42%, rgba(90, 104, 84, 0.78));
+}
+.wx-bar.neg {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(154, 109, 105, 0.6) 42%, rgba(130, 88, 84, 0.76));
+}
 .wx-bar.proj { opacity: 0.62; }
-[data-theme="dark"] .wx-bar.pos { background: #a3b39a; }
-[data-theme="dark"] .wx-bar.neg { background: #c4a09c; }
+[data-theme="dark"] .wx-bar { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28); }
+[data-theme="dark"] .wx-bar.pos {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(140, 158, 132, 0.45) 40%, rgba(120, 138, 112, 0.62));
+}
+[data-theme="dark"] .wx-bar.neg {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(176, 140, 136, 0.42) 40%, rgba(150, 112, 108, 0.6));
+}
 .wx-dot {
   position: absolute;
   top: 50%;
