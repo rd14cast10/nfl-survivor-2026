@@ -910,3 +910,143 @@ h2, .modal-pick-title { font-size: 16px; line-height: 1.3; }
   }
 }
 
+/* Liquid glass on the sections that need a surface. Rows stay plain.
+   UI color stays muted. Team logos are the only saturated color. */
+:root {
+  --paper: #f3f0eb;
+  --ink: #1c1b19;
+  --muted: #6b6560;
+  --faint: #8a847e;
+  --line: #e4dfd8;
+  --blue: #6e675f;
+  --blue-hover: #4a453f;
+  --green: #6f7568;
+  --red: #8d736e;
+}
+[data-theme="dark"] {
+  --paper: #000000;
+  --ink: #f3f0eb;
+  --muted: #b7b1aa;
+  --faint: #8a847e;
+  --line: rgba(255, 255, 255, 0.14);
+  --blue: #c8c2ba;
+  --blue-hover: #e4dfd8;
+  --green: #b7bdb2;
+  --red: #cbb8b4;
+}
+html, body { background: var(--paper); }
+
+.glass-surface {
+  background: rgba(255, 252, 249, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  backdrop-filter: blur(16px) saturate(1.15);
+}
+[data-theme="dark"] .glass-surface {
+  background: rgba(34, 30, 28, 0.9);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #f7f4f0;
+}
+
+.tab-panel[data-panel="home"] > section:first-child,
+#confidence.board {
+  margin-top: 8px;
+  padding: 28px 22px 8px;
+  border-radius: 44px;
+}
+.tab-panel[data-panel="home"] > section:first-child,
+#confidence.board,
+.alt-card,
+.alt-card:first-child,
+.home-stats .stat-grid,
+.other-grid .panel.glass {
+  background: rgba(255, 252, 249, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  backdrop-filter: blur(16px) saturate(1.15);
+}
+[data-theme="dark"] .tab-panel[data-panel="home"] > section:first-child,
+[data-theme="dark"] #confidence.board,
+[data-theme="dark"] .alt-card,
+[data-theme="dark"] .alt-card:first-child,
+[data-theme="dark"] .home-stats .stat-grid,
+[data-theme="dark"] .other-grid .panel.glass {
+  background: rgba(34, 30, 28, 0.9);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #f7f4f0;
+}
+
+.alt-card,
+.alt-card:first-child {
+  margin-top: 14px;
+  padding: 18px 18px 16px;
+  border-radius: 28px;
+}
+.alt-card:first-child { margin-top: 16px; }
+#confidence.board { border-radius: 44px; }
+.other-grid .panel.glass {
+  padding: 22px 22px 18px;
+  border-radius: 36px;
+}
+.other-grid > div { margin-top: 18px; }
+.other-grid > div:first-child { margin-top: 20px; }
+
+.home-stats { width: min(420px, 100%); margin: 28px auto 8px; }
+.home-stats .stat-grid { border-radius: 32px; padding: 18px 20px; }
+
+#confidence .match,
+.tab-panel[data-panel="home"] .wx-row {
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.wx-row.is-open .wx-cap {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: var(--ink);
+}
+.badge, .status-note {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: var(--muted);
+}
+.badge-plan, .badge-open, .badge-bonus { color: var(--muted); }
+.tone-win, .badge-win, .points-win { color: var(--green); }
+.tone-loss, .badge-loss, .badge-miss, .points-loss, .wx-pts.is-neg { color: var(--red); }
+.pick-btn,
+.pick-btn.is-selected,
+a.external,
+a { color: var(--ink); }
+.pick-btn.is-selected { background: none; font-weight: 600; }
+
+@media (max-width: 699px) {
+  .tab-panel[data-panel="home"] > section:first-child,
+  #confidence.board { border-radius: 36px; padding: 22px 16px 6px; }
+  .alt-card, .alt-card:first-child { border-radius: 24px; }
+  .other-grid .panel.glass, .home-stats .stat-grid { border-radius: 28px; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .tab-panel[data-panel="home"] > section:first-child,
+  #confidence.board,
+  .alt-card,
+  .home-stats .stat-grid,
+  .other-grid .panel.glass {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #fffdfb;
+  }
+  [data-theme="dark"] .tab-panel[data-panel="home"] > section:first-child,
+  [data-theme="dark"] #confidence.board,
+  [data-theme="dark"] .alt-card,
+  [data-theme="dark"] .home-stats .stat-grid,
+  [data-theme="dark"] .other-grid .panel.glass { background: #1c1917; }
+}
+
