@@ -1121,46 +1121,21 @@ a { color: var(--ink); }
   backdrop-filter: none;
 }
 .masthead {
-  position: relative;
-  isolation: isolate;
   width: min(880px, calc(100% - 28px));
   min-height: 48px;
   margin: 0 auto;
   padding: 6px 8px 6px 16px;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 255, 255, 0.5) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.96);
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    inset 0 -1px 0 rgba(255, 255, 255, 0.4),
-    0 0 0 1px rgba(0, 0, 0, 0.05),
-    0 10px 24px rgba(0, 0, 0, 0.05);
-  -webkit-backdrop-filter: blur(22px) saturate(1.45) brightness(1.06);
-  backdrop-filter: blur(22px) saturate(1.45) brightness(1.06);
-}
-.masthead::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 42%, rgba(0, 0, 0, 0.08) 100%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5));
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 #ffffff, 0 0 0 1px rgba(0, 0, 0, 0.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
 }
 [data-theme="dark"] .masthead {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.55) 42%, rgba(0, 0, 0, 0.78) 100%);
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.34),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-[data-theme="dark"] .masthead::before {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.12) 46%, rgba(255, 255, 255, 0.04) 100%);
+  background: linear-gradient(180deg, rgba(16, 16, 18, 0.86), rgba(0, 0, 0, 0.72));
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 .tabbar-pill {
   background: transparent;
@@ -1175,7 +1150,6 @@ a { color: var(--ink); }
     backdrop-filter: none;
   }
   [data-theme="dark"] .masthead { background: #000000; }
-  .masthead::before { display: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .topbar {
@@ -1194,7 +1168,6 @@ a { color: var(--ink); }
     background: #000000;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
   }
-  .masthead::before { display: none; }
 }
 @media (max-width: 699px) {
   .masthead {
