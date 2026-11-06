@@ -222,12 +222,14 @@ function renderCalendar(state) {
     button.type = "button";
     button.dataset.week = String(row.number);
     if (row.kind === "open") button.id = "current-week-row";
-    button.append(cell("span", "wx-week", `Wk ${row.number}`));
+    button.append(cell("span", "wx-week", `Week ${row.number}`));
     const icon = cell("span", "wx-icon");
     const logoTeam = row.team || row.ghost;
     const img = logoTeam ? logoEl(logos, logoTeam, "wx-logo") : null;
     if (img) { if (!row.team) img.classList.add("is-ghost"); icon.append(img); }
     else icon.append(cell("span", "wx-logo wx-blank"));
+    const teamName = row.team || row.ghost || "";
+    if (teamName) icon.append(cell("span", row.team ? "wx-team" : "wx-team is-ghost", teamName));
     icon.append(cell("span", `wx-cap tone-${row.tone || "muted"}`, row.caption));
     button.append(icon);
     const track = cell("span", "wx-track");
