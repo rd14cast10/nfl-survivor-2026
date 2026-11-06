@@ -186,7 +186,36 @@ h2 {
 
 /* Weekly picks: a latest-news list */
 .tab-panel[data-panel="home"] > section:first-child { margin-top: 8px; }
-.planner { margin-top: 72px; }
+.planner {
+  position: relative;
+  margin-top: 56px;
+  padding: 36px 0 44px;
+}
+.planner::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: #f5f5f7;
+}
+.planner-card {
+  padding: 28px 28px 8px;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), 0 14px 36px rgba(0, 0, 0, 0.08);
+}
+.planner-card .section-kicker { margin-bottom: 8px; }
+.planner-card h2 { font-size: clamp(28px, 4vw, 34px); line-height: 1.12; }
+.planner-card .hint { max-width: 40rem; font-size: 15px; }
+[data-theme="dark"] .planner::before { background: #000000; }
+[data-theme="dark"] .planner-card {
+  background: #1c1c1e;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.55);
+}
 
 #calendar.wx { display: block; margin-top: 12px; }
 #calendar.wx .wx-row {
@@ -661,6 +690,7 @@ body.modal-open { overflow: hidden; }
   .wordmark { flex: 1 0 100%; font-size: 28px; }
   .theme-switch { margin-left: auto; }
   .shell { width: min(100% - 40px, 980px); padding-top: 28px; }
+  .planner-card { padding: 22px 18px 6px; border-radius: 24px; }
   h2 { font-size: 24px; }
   #calendar.wx .wx-row {
     grid-template-columns: 68px 28px minmax(0, 1fr) auto;
