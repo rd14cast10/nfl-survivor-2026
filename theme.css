@@ -227,7 +227,7 @@ h2 {
   row-gap: 0;
   width: 100%;
   margin: 0;
-  padding: 4px 0;
+  padding: 9px 0;
   border: 0;
   border-top: 1px solid var(--line);
   background: transparent;
@@ -247,7 +247,7 @@ h2 {
     "logo team"
     "logo cap";
   column-gap: 8px;
-  row-gap: 0;
+  row-gap: 2px;
   align-items: center;
   min-width: 0;
 }
@@ -267,7 +267,7 @@ h2 {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.05;
+  line-height: 1.2;
 }
 .wx-team.is-ghost { color: var(--muted); font-weight: 600; }
 .wx-cap {
@@ -280,7 +280,7 @@ h2 {
   font-size: 12px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  line-height: 1.05;
+  line-height: 1.2;
 }
 .tone-win { color: var(--green); }
 .tone-loss { color: var(--red); }
@@ -733,7 +733,7 @@ body.modal-open { overflow: hidden; }
   #calendar.wx .wx-row {
     grid-template-columns: 44px minmax(0, 1.65fr) minmax(52px, 0.72fr) 36px;
     column-gap: 6px;
-    padding: 3px 0;
+    padding: 8px 0;
   }
   .wx-week { font-size: 12px; white-space: nowrap; }
   .wx-logo, .wx-blank { width: 24px; height: 24px; }
