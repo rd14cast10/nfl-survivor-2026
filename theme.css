@@ -865,3 +865,15 @@ h2, .modal-pick-title { font-size: 16px; line-height: 1.3; }
   .planner-card { padding: 0; border-radius: 0; }
 }
 
+/* Wider segmented tabs. Same pill, more room across. */
+.tab { flex: 1 1 0; text-align: center; }
+@media (min-width: 700px) {
+  .masthead { grid-template-columns: 1fr min(480px, 54%) 1fr; }
+  .tabbar, .tabbar-pill { width: 100%; }
+}
+@media (max-width: 699px) {
+  .tabbar { flex: 1 1 auto; min-width: 0; }
+  .tabbar-pill { width: 100%; }
+  .theme-switch { margin-left: 16px; }
+}
+
