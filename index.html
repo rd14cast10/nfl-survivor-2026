@@ -37,17 +37,19 @@
   </script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="shortcut icon" href="favicon.svg">
-  <link rel="stylesheet" href="theme.css?v=20261106s">
+  <link rel="stylesheet" href="theme.css?v=20261106n">
 </head>
 <body>
-  <div class="atmosphere" aria-hidden="true"></div>
   <header class="topbar">
-    <nav class="tabbar" aria-label="Sections">
-      <div class="tabbar-pill" role="tablist">
-        <a class="tab is-active" href="#home" data-tab="home" aria-current="page">Home</a>
-        <a class="tab" href="#nfelo" data-tab="nfelo">NFELO</a>
-        <a class="tab" href="#other" data-tab="other">Other</a>
-      </div>
+    <div class="masthead">
+      <a class="wordmark" href="#home">Raul’s Survivor</a>
+      <nav class="tabbar" aria-label="Sections">
+        <div class="tabbar-pill" role="tablist">
+          <a class="tab is-active" href="#home" data-tab="home" aria-current="page">Home</a>
+          <a class="tab" href="#nfelo" data-tab="nfelo">NFELO</a>
+          <a class="tab" href="#other" data-tab="other">Other</a>
+        </div>
+      </nav>
       <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Dark mode">
     <svg class="theme-icon theme-sun" viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
@@ -60,12 +62,11 @@
     </svg>
     <span class="theme-knob" aria-hidden="true"></span>
       </button>
-    </nav>
+    </div>
   </header>
   <main class="shell">
    <div class="tab-panel" data-panel="home">
 
-    <div class="home-feature">
     <section aria-labelledby="weekly">
       <div class="section-head">
         <div>
@@ -75,7 +76,6 @@
       </div>
       <div id="calendar" class="calendar" aria-live="polite"></div>
     </section>
-    </div>
 
     <section class="planner" aria-labelledby="planner-title">
       <div class="section-head">
@@ -172,7 +172,6 @@
       <div id="modal-body"></div>
     </div>
   </div>
-  <script src="glass.js"></script>
-  <script src="app.js?v=20261105w"></script>
+  <script src="app.js?v=20261106n"></script>
 </body>
 </html>
