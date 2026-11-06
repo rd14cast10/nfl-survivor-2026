@@ -303,7 +303,18 @@ h2 {
 }
 .alt-card:first-child { border-top: 0; }
 .alt-card:hover .tile-team { color: var(--blue); }
-.alt-card > .tile-logo { grid-row: 1 / span 4; width: 40px; height: 40px; object-fit: contain; }
+.alt-card > .tile-logo {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  align-self: start;
+}
+.alt-card > :not(.tile-logo) {
+  grid-column: 2;
+  min-width: 0;
+}
 .tile-team { font-size: 21px; line-height: 1.15; }
 .opponent { margin: 0; font-size: 14px; }
 .alt-card .badge { justify-self: start; margin-top: 6px; }
