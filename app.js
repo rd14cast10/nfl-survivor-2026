@@ -222,7 +222,7 @@ function renderCalendar(state) {
     button.type = "button";
     button.dataset.week = String(row.number);
     if (row.kind === "open") button.id = "current-week-row";
-    button.append(cell("span", "wx-week", `Week ${row.number}`));
+    button.append(cell("span", "wx-week", `W${row.number}`));
     const icon = cell("span", "wx-icon");
     const logoTeam = row.team || row.ghost;
     const img = logoTeam ? logoEl(logos, logoTeam, "wx-logo") : null;
