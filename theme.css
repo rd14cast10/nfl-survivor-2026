@@ -1369,8 +1369,11 @@ a { color: var(--ink); }
 [data-theme="dark"] .status-dot.is-pass { background: rgba(255, 159, 26, 0.28); }
 [data-theme="dark"] .status-dot.is-pass .status-dot-core { background: #ff9f1a; }
 
-/* Score stack sits in a quiet frosted card tinted by the status. */
-.match-prob {
+/* Score stack sits in one soft frost card. Status lives only on the disc. */
+.match-prob,
+.match-prob.is-pick,
+.match-prob.is-used,
+.match-prob.is-pass {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1384,48 +1387,21 @@ a { color: var(--ink); }
   box-shadow: none;
   text-align: center;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 58%),
-    rgba(214, 230, 246, 0.72);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.35) 58%),
+    rgba(244, 246, 248, 0.96);
   -webkit-backdrop-filter: blur(40px) saturate(1.65);
   backdrop-filter: blur(40px) saturate(1.65);
 }
 .match-prob .status-dot { margin-top: 6px; }
-.match-prob.is-pick {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 58%),
-    rgba(31, 173, 74, 0.2);
-}
-.match-prob.is-used {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 58%),
-    rgba(224, 35, 35, 0.16);
-}
-.match-prob.is-pass {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 58%),
-    rgba(240, 138, 18, 0.2);
-}
 [data-theme="dark"] .match-prob,
 [data-theme="dark"] .match-prob.is-pick,
 [data-theme="dark"] .match-prob.is-used,
 [data-theme="dark"] .match-prob.is-pass {
-  box-shadow: none;
   border: 0;
-}
-[data-theme="dark"] .match-prob.is-pick {
+  box-shadow: none;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 55%),
-    rgba(18, 72, 36, 0.82);
-}
-[data-theme="dark"] .match-prob.is-used {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 55%),
-    rgba(92, 18, 18, 0.84);
-}
-[data-theme="dark"] .match-prob.is-pass {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 55%),
-    rgba(92, 52, 12, 0.84);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 55%),
+    rgba(255, 255, 255, 0.06);
 }
 
 /* Simple left sidebar. The floating top bar is no longer in the page. */
