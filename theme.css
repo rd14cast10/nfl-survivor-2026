@@ -1337,4 +1337,20 @@ a { color: var(--ink); }
   box-shadow: none;
   color: #d7dee6;
 }
+.status-note.status-used {
+  border: 0;
+  box-shadow: none;
+  color: #6f4540;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
+    rgba(214, 168, 162, 0.78);
+}
+[data-theme="dark"] .status-note.status-used {
+  border: 0;
+  box-shadow: none;
+  color: #f0d2ce;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 55%),
+    rgba(86, 46, 44, 0.82);
+}
 

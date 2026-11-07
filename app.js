@@ -425,7 +425,7 @@ function appendBoardGames(root, week, logos, used, pick, saving) {
     const started = kickedOff(week, game.favorite);
     const selected = pick?.team === game.favorite;
     if (used.has(game.favorite)) {
-      action.append(cell("span", "status-note", "Already used"));
+      action.append(cell("span", "status-note status-used", "Already used"));
     } else if (!selected && (started || locked)) {
       action.append(cell("span", "status-note", started ? "Kickoff passed" : "Pick locked"));
     } else {
