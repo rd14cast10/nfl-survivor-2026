@@ -1261,7 +1261,9 @@ a { color: var(--ink); }
   .topbar { transition: none; }
 }
 
-/* Frosted pills: translucent blue-white glass, one blur, a soft top highlight. */
+/* Frosted pills. The shape is the fill: no border and no outer ring.
+   A soft top wash is the only highlight, and the blur is strong enough
+   to read as glass without a stroke. */
 #weekly,
 #planner-title,
 .other-grid h2,
@@ -1276,12 +1278,14 @@ a { color: var(--ink); }
   align-self: flex-start;
   margin: 0 0 8px;
   padding: 3px 10px;
+  border: 0;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  background: rgba(226, 238, 250, 0.58);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 0 0 1px rgba(168, 190, 212, 0.32);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  backdrop-filter: blur(18px) saturate(1.3);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
+    rgba(214, 230, 246, 0.72);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(40px) saturate(1.65);
+  backdrop-filter: blur(40px) saturate(1.65);
   color: #44505c;
   font-size: 12px;
   font-weight: 550;
@@ -1301,8 +1305,11 @@ a { color: var(--ink); }
 .badge-miss,
 .badge-tie {
   color: #44505c;
-  background: rgba(226, 238, 250, 0.58);
-  border-color: rgba(255, 255, 255, 0.78);
+  border: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
+    rgba(214, 230, 246, 0.72);
+  box-shadow: none;
 }
 [data-theme="dark"] #weekly,
 [data-theme="dark"] #planner-title,
@@ -1318,9 +1325,11 @@ a { color: var(--ink); }
 [data-theme="dark"] .badge-win,
 [data-theme="dark"] .badge-loss,
 [data-theme="dark"] .badge-miss {
-  border-color: rgba(198, 216, 234, 0.22);
-  background: rgba(14, 20, 30, 0.62);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 55%),
+    rgba(18, 26, 40, 0.74);
+  box-shadow: none;
   color: #d7dee6;
 }
 
