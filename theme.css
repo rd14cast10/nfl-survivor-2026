@@ -483,9 +483,9 @@ h2 {
 .matchup-rows { display: grid; gap: 6px; }
 .team-row {
   display: grid;
-  grid-template-columns: 14px 28px 18px minmax(0, 1fr);
+  grid-template-columns: 18px 28px minmax(0, 1fr);
   align-items: center;
-  column-gap: 4px;
+  column-gap: 8px;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.012em;
@@ -497,7 +497,6 @@ h2 {
   font-weight: 400;
   text-align: right;
 }
-.team-row > span:last-child { white-space: nowrap; }
 .team-row img,
 .matchup img,
 .h-7 { width: 28px; height: 28px; object-fit: contain; }
@@ -518,7 +517,12 @@ h2 {
   border-radius: inherit;
   background: var(--blue);
 }
-.match-prob { text-align: right; }
+.match-prob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 .match-prob strong {
   display: block;
   font-family: var(--display);
@@ -1341,25 +1345,26 @@ a { color: var(--ink); }
 .status-dot {
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
+  width: 28px;
+  height: 28px;
+  margin-top: 10px;
   border-radius: 50%;
 }
 .status-dot-core {
-  width: 7px;
-  height: 7px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
-.status-dot.is-pick { background: rgba(176, 190, 166, 0.55); }
-.status-dot.is-pick .status-dot-core { background: #6d7b66; }
-.status-dot.is-used { background: rgba(214, 168, 162, 0.55); }
-.status-dot.is-used .status-dot-core { background: #6f4540; }
-.status-dot.is-pass { background: rgba(214, 184, 140, 0.55); }
-.status-dot.is-pass .status-dot-core { background: #8a6844; }
-[data-theme="dark"] .status-dot.is-pick { background: rgba(140, 158, 132, 0.28); }
-[data-theme="dark"] .status-dot.is-pick .status-dot-core { background: #c5d0bc; }
-[data-theme="dark"] .status-dot.is-used { background: rgba(168, 120, 114, 0.32); }
-[data-theme="dark"] .status-dot.is-used .status-dot-core { background: #f0d2ce; }
-[data-theme="dark"] .status-dot.is-pass { background: rgba(176, 146, 96, 0.3); }
-[data-theme="dark"] .status-dot.is-pass .status-dot-core { background: #e6c89a; }
+.status-dot.is-pick { background: rgba(31, 173, 74, 0.28); }
+.status-dot.is-pick .status-dot-core { background: #1fad4a; }
+.status-dot.is-used { background: rgba(224, 35, 35, 0.22); }
+.status-dot.is-used .status-dot-core { background: #e02323; }
+.status-dot.is-pass { background: rgba(240, 138, 18, 0.26); }
+.status-dot.is-pass .status-dot-core { background: #f08a12; }
+[data-theme="dark"] .status-dot.is-pick { background: rgba(61, 222, 114, 0.28); }
+[data-theme="dark"] .status-dot.is-pick .status-dot-core { background: #3dde72; }
+[data-theme="dark"] .status-dot.is-used { background: rgba(255, 77, 77, 0.28); }
+[data-theme="dark"] .status-dot.is-used .status-dot-core { background: #ff4d4d; }
+[data-theme="dark"] .status-dot.is-pass { background: rgba(255, 159, 26, 0.28); }
+[data-theme="dark"] .status-dot.is-pass .status-dot-core { background: #ff9f1a; }
 
