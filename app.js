@@ -913,3 +913,25 @@ main();
   window.addEventListener("hashchange", () => { show(); window.scrollTo({ top: 0 }); });
   show();
 })();
+
+(function setupNavCollapse() {
+  const bar = document.querySelector(".topbar");
+  const menu = document.querySelector(".nav-menu");
+  if (!bar || !menu) return;
+  const setOpen = (open) => {
+    bar.classList.toggle("is-open", open);
+    menu.setAttribute("aria-expanded", open ? "true" : "false");
+    menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  };
+  const onScroll = () => {
+    const collapsed = window.scrollY > 16;
+    bar.classList.toggle("is-collapsed", collapsed);
+    if (!collapsed) setOpen(false);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  menu.addEventListener("click", () => setOpen(!bar.classList.contains("is-open")));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setOpen(false);
+  });
+  onScroll();
+})();
