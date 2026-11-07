@@ -256,16 +256,16 @@ function renderCalendar(state) {
     const track = cell("span", "wx-track");
     track.append(cell("span", "wx-zero"));
     if (row.points !== null && row.points !== undefined) {
-      const pct = Math.min(50, (Math.abs(row.points) / max) * 50);
+      const pct = Math.min(100, (Math.abs(row.points) / max) * 100);
       const bar = cell("span", `wx-bar ${row.points < 0 ? "neg" : "pos"}${row.projected ? " proj" : ""}`);
-      bar.style.width = `${Math.max(pct, 1.5)}%`;
-      if (row.points < 0) bar.style.right = "50%"; else bar.style.left = "50%";
+      bar.style.width = `${row.points === 0 ? 0 : Math.max(pct, 3)}%`;
+      bar.style.left = "0";
       track.append(bar);
     }
     if (row.kind === "open") {
       const dot = cell("span", "wx-dot");
       const p = row.points ?? 0;
-      dot.style.left = `${50 + Math.max(-50, Math.min(50, (p / max) * 50))}%`;
+      dot.style.left = `${Math.max(0, Math.min(100, (Math.abs(p) / max) * 100))}%`;
       track.append(dot);
     }
     button.append(track);
@@ -461,10 +461,11 @@ function appendBoardGames(root, week, logos, used, pick, saving, notRecommended)
       action.append(button);
     }
     body.append(matchup, bar, action);
-    const score = cell("div", "match-prob");
+    const kind = favoriteDot(game, used, notRecommended, canPick);
+    const score = cell("div", `match-prob is-${kind}`);
     score.append(cell("strong", "", String(game.winsPer100)));
     score.append(cell("span", "", "wins / 100"));
-    score.append(statusDot(favoriteDot(game, used, notRecommended, canPick)));
+    score.append(statusDot(kind));
     article.append(body, score);
     root.append(article);
   }
@@ -937,24 +938,25 @@ main();
   show();
 })();
 
-(function setupNavCollapse() {
-  const bar = document.querySelector(".topbar");
-  const menu = document.querySelector(".nav-menu");
-  if (!bar || !menu) return;
+(function setupSidebar() {
+  const frame = document.querySelector(".app-frame");
+  const toggle = document.querySelector(".sidebar-toggle");
+  const scrim = document.querySelector(".sidebar-scrim");
+  if (!frame || !toggle) return;
   const setOpen = (open) => {
-    bar.classList.toggle("is-open", open);
-    menu.setAttribute("aria-expanded", open ? "true" : "false");
-    menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    frame.classList.toggle("is-nav-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    if (scrim) scrim.hidden = !open;
   };
-  const onScroll = () => {
-    const collapsed = window.scrollY > 16;
-    bar.classList.toggle("is-collapsed", collapsed);
-    if (!collapsed) setOpen(false);
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  menu.addEventListener("click", () => setOpen(!bar.classList.contains("is-open")));
+  toggle.addEventListener("click", () => setOpen(!frame.classList.contains("is-nav-open")));
+  if (scrim) scrim.addEventListener("click", () => setOpen(false));
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setOpen(false);
   });
-  onScroll();
+  document.querySelectorAll(".tabbar .tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      if (window.matchMedia("(max-width: 699px)").matches) setOpen(false);
+    });
+  });
 })();
