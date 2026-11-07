@@ -55,6 +55,21 @@ function teamLabel(name, record) {
   return span;
 }
 
+function boardStatus(team, game, used) {
+  if (used.has(team)) return "used";
+  if (team === game.favorite) return "pick";
+  return "pass";
+}
+
+function statusDot(kind) {
+  const label = kind === "used" ? "Already used" : kind === "pick" ? "Available to pick" : "Not recommended";
+  const dot = cell("span", `status-dot is-${kind}`);
+  dot.setAttribute("role", "img");
+  dot.setAttribute("aria-label", label);
+  dot.append(cell("span", "status-dot-core"));
+  return dot;
+}
+
 async function loadSeason() {
   const season = await fetch("data/season.json", { cache: "no-store" }).then((response) => {
     if (!response.ok) throw new Error("season");
@@ -413,9 +428,9 @@ function appendBoardGames(root, week, logos, used, pick, saving) {
     const body = cell("div", "min-w-0");
     const matchup = cell("div", "matchup matchup-rows");
     const awayRow = cell("div", "team-row");
-    awayRow.append(cell("span", "at", ""), logo(logos, game.away), teamLabel(game.away, game.awayRecord));
+    awayRow.append(cell("span", "at", ""), logo(logos, game.away), statusDot(boardStatus(game.away, game, used)), teamLabel(game.away, game.awayRecord));
     const homeRow = cell("div", "team-row");
-    homeRow.append(cell("span", "at", "at"), logo(logos, game.home), teamLabel(game.home, game.homeRecord));
+    homeRow.append(cell("span", "at", "at"), logo(logos, game.home), statusDot(boardStatus(game.home, game, used)), teamLabel(game.home, game.homeRecord));
     matchup.append(awayRow, homeRow);
     const bar = cell("div", "confidence-bar");
     const fill = cell("span", "confidence-bar-fill");
@@ -425,7 +440,7 @@ function appendBoardGames(root, week, logos, used, pick, saving) {
     const started = kickedOff(week, game.favorite);
     const selected = pick?.team === game.favorite;
     if (used.has(game.favorite)) {
-      action.append(cell("span", "status-note status-used", "Already used"));
+      // The red dot on the team name is the used marker. No pick button.
     } else if (!selected && (started || locked)) {
       action.append(cell("span", "status-note", started ? "Kickoff passed" : "Pick locked"));
     } else {

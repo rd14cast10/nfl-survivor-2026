@@ -483,9 +483,9 @@ h2 {
 .matchup-rows { display: grid; gap: 6px; }
 .team-row {
   display: grid;
-  grid-template-columns: 18px 28px minmax(0, 1fr);
+  grid-template-columns: 14px 28px 18px minmax(0, 1fr);
   align-items: center;
-  column-gap: 8px;
+  column-gap: 4px;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.012em;
@@ -497,6 +497,7 @@ h2 {
   font-weight: 400;
   text-align: right;
 }
+.team-row > span:last-child { white-space: nowrap; }
 .team-row img,
 .matchup img,
 .h-7 { width: 28px; height: 28px; object-fit: contain; }
@@ -1337,20 +1338,28 @@ a { color: var(--ink); }
   box-shadow: none;
   color: #d7dee6;
 }
-.status-note.status-used {
-  border: 0;
-  box-shadow: none;
-  color: #6f4540;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
-    rgba(214, 168, 162, 0.78);
+.status-dot {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
 }
-[data-theme="dark"] .status-note.status-used {
-  border: 0;
-  box-shadow: none;
-  color: #f0d2ce;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 55%),
-    rgba(86, 46, 44, 0.82);
+.status-dot-core {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
 }
+.status-dot.is-pick { background: rgba(176, 190, 166, 0.55); }
+.status-dot.is-pick .status-dot-core { background: #6d7b66; }
+.status-dot.is-used { background: rgba(214, 168, 162, 0.55); }
+.status-dot.is-used .status-dot-core { background: #6f4540; }
+.status-dot.is-pass { background: rgba(214, 184, 140, 0.55); }
+.status-dot.is-pass .status-dot-core { background: #8a6844; }
+[data-theme="dark"] .status-dot.is-pick { background: rgba(140, 158, 132, 0.28); }
+[data-theme="dark"] .status-dot.is-pick .status-dot-core { background: #c5d0bc; }
+[data-theme="dark"] .status-dot.is-used { background: rgba(168, 120, 114, 0.32); }
+[data-theme="dark"] .status-dot.is-used .status-dot-core { background: #f0d2ce; }
+[data-theme="dark"] .status-dot.is-pass { background: rgba(176, 146, 96, 0.3); }
+[data-theme="dark"] .status-dot.is-pass .status-dot-core { background: #e6c89a; }
 
