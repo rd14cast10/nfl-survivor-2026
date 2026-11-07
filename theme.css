@@ -301,72 +301,48 @@ h2 {
 .wx-pts.is-neg { color: #7a6562; }
 .wx-pts.is-proj { color: var(--muted); font-weight: 500; }
 [data-theme="dark"] .wx-pts.is-neg { color: #d7c7c4; }
-.wx-track {
-  position: relative;
-  left: auto;
-  right: auto;
-  bottom: auto;
-  height: 10px;
-  margin: 0;
+.wx-leds {
+  display: grid;
+  grid-template-columns: repeat(var(--slots), minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  min-width: 0;
+  height: 14px;
   border: 0;
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
-    rgba(214, 230, 246, 0.72);
+  background: none;
   box-shadow: none;
-  -webkit-backdrop-filter: blur(40px) saturate(1.65);
-  backdrop-filter: blur(40px) saturate(1.65);
   pointer-events: none;
-  overflow: hidden;
 }
-[data-theme="dark"] .wx-track {
-  border: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 55%),
-    rgba(18, 26, 40, 0.74);
-  box-shadow: none;
-}
-.wx-zero { display: none; }
-.wx-bar {
-  display: block;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  border: 0;
-  border-radius: 999px;
-  box-shadow: none;
-  -webkit-backdrop-filter: blur(40px) saturate(1.65);
-  backdrop-filter: blur(40px) saturate(1.65);
-}
-.wx-bar.pos {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(109, 123, 102, 0.62) 42%, rgba(90, 104, 84, 0.78));
-}
-.wx-bar.neg {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(154, 109, 105, 0.6) 42%, rgba(130, 88, 84, 0.76));
-}
-.wx-bar.proj { opacity: 0.62; }
-[data-theme="dark"] .wx-bar { box-shadow: none; }
-[data-theme="dark"] .wx-bar.pos {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(140, 158, 132, 0.45) 40%, rgba(120, 138, 112, 0.62));
-}
-[data-theme="dark"] .wx-bar.neg {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(176, 140, 136, 0.42) 40%, rgba(150, 112, 108, 0.6));
-}
-.wx-dot {
-  position: absolute;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  margin: -4.5px 0 0 -4.5px;
+.wx-led {
+  width: min(9px, 72%);
+  aspect-ratio: 1;
   border-radius: 50%;
-  background: #f4f4f4;
-  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.28);
-  z-index: 1;
+  background: rgba(28, 36, 46, 0.14);
+  box-shadow: none;
 }
-[data-theme="dark"] .wx-dot {
-  background: #111111;
-  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+.wx-led.is-on {
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 42%),
+    #6fbfa6;
+}
+.wx-leds.is-loss .wx-led.is-on {
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 42%),
+    #c98984;
+}
+.wx-leds.is-proj .wx-led.is-on { opacity: 0.5; }
+[data-theme="dark"] .wx-led { background: rgba(255, 255, 255, 0.14); }
+[data-theme="dark"] .wx-led.is-on {
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 40%),
+    #6ef0c2;
+  box-shadow: 0 0 7px rgba(110, 240, 194, 0.5);
+}
+[data-theme="dark"] .wx-leds.is-loss .wx-led.is-on {
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 40%),
+    #e0aaa4;
+  box-shadow: 0 0 7px rgba(210, 150, 146, 0.38);
 }
 
 /* Season planner: stacked stories, not cards */

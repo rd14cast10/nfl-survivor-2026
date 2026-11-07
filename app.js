@@ -177,9 +177,22 @@ function placeText(home, opponent) {
   return home ? `vs. ${opponent}` : `at ${opponent}`;
 }
 
+function ledSlots() {
+  return window.matchMedia("(max-width: 699px)").matches ? 9 : 18;
+}
+
+let calendarState = null;
+let calendarSlots = 0;
+window.addEventListener("resize", () => {
+  if (!calendarState || ledSlots() === calendarSlots) return;
+  renderCalendar(calendarState);
+});
+
 function renderCalendar(state) {
   const root = document.getElementById("calendar");
   if (!root) return;
+  calendarState = state;
+  calendarSlots = ledSlots();
   root.replaceChildren();
   root.classList.add("wx");
   const logos = state.season.logos;
@@ -253,22 +266,23 @@ function renderCalendar(state) {
     if (teamName) icon.append(cell("span", row.team ? "wx-team" : "wx-team is-ghost", teamName));
     icon.append(cell("span", `wx-cap tone-${row.tone || "muted"}`, row.caption));
     button.append(icon);
-    const track = cell("span", "wx-track");
-    track.append(cell("span", "wx-zero"));
+    const slots = ledSlots();
+    const loss = (row.points ?? 0) < 0;
+    const leds = cell("span", `wx-leds${loss ? " is-loss" : " is-win"}${row.projected ? " is-proj" : ""}`);
+    leds.style.setProperty("--slots", String(slots));
+    leds.setAttribute("aria-hidden", "true");
+    let on = 0;
     if (row.points !== null && row.points !== undefined) {
-      const pct = Math.min(100, (Math.abs(row.points) / max) * 100);
-      const bar = cell("span", `wx-bar ${row.points < 0 ? "neg" : "pos"}${row.projected ? " proj" : ""}`);
-      bar.style.width = `${row.points === 0 ? 0 : Math.max(pct, 3)}%`;
-      bar.style.left = "0";
-      track.append(bar);
+      const mag = Math.abs(row.points);
+      if (mag >= 0.75) {
+        on = Math.round((mag / max) * slots);
+        if (on < 1) on = 1;
+        if (mag / max >= 0.08 && on < 2) on = 2;
+        on = Math.min(slots, on);
+      }
     }
-    if (row.kind === "open") {
-      const dot = cell("span", "wx-dot");
-      const p = row.points ?? 0;
-      dot.style.left = `${Math.max(0, Math.min(100, (Math.abs(p) / max) * 100))}%`;
-      track.append(dot);
-    }
-    button.append(track);
+    for (let i = 0; i < slots; i += 1) leds.append(cell("i", i < on ? "wx-led is-on" : "wx-led"));
+    button.append(leds);
     const pts = cell("span", `wx-pts${row.projected || row.points === null ? " is-proj" : ""}${!row.projected && (row.points ?? 0) < 0 ? " is-neg" : ""}`, row.text);
     button.append(pts);
     button.setAttribute("aria-label", row.label);
