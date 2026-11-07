@@ -517,7 +517,12 @@ h2 {
   border-radius: inherit;
   background: var(--blue);
 }
-.match-prob { text-align: right; }
+.match-prob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 .match-prob strong {
   display: block;
   font-family: var(--display);
@@ -1337,20 +1342,29 @@ a { color: var(--ink); }
   box-shadow: none;
   color: #d7dee6;
 }
-.status-note.status-used {
-  border: 0;
-  box-shadow: none;
-  color: #6f4540;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
-    rgba(214, 168, 162, 0.78);
+.status-dot {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 10px;
+  border-radius: 50%;
 }
-[data-theme="dark"] .status-note.status-used {
-  border: 0;
-  box-shadow: none;
-  color: #f0d2ce;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 55%),
-    rgba(86, 46, 44, 0.82);
+.status-dot-core {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
+.status-dot.is-pick { background: rgba(31, 173, 74, 0.28); }
+.status-dot.is-pick .status-dot-core { background: #1fad4a; }
+.status-dot.is-used { background: rgba(224, 35, 35, 0.22); }
+.status-dot.is-used .status-dot-core { background: #e02323; }
+.status-dot.is-pass { background: rgba(240, 138, 18, 0.26); }
+.status-dot.is-pass .status-dot-core { background: #f08a12; }
+[data-theme="dark"] .status-dot.is-pick { background: rgba(61, 222, 114, 0.28); }
+[data-theme="dark"] .status-dot.is-pick .status-dot-core { background: #3dde72; }
+[data-theme="dark"] .status-dot.is-used { background: rgba(255, 77, 77, 0.28); }
+[data-theme="dark"] .status-dot.is-used .status-dot-core { background: #ff4d4d; }
+[data-theme="dark"] .status-dot.is-pass { background: rgba(255, 159, 26, 0.28); }
+[data-theme="dark"] .status-dot.is-pass .status-dot-core { background: #ff9f1a; }
 

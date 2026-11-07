@@ -55,6 +55,27 @@ function teamLabel(name, record) {
   return span;
 }
 
+function notRecommendedTeams(planner) {
+  return new Set(
+    (planner?.alternatives || []).filter((alt) => alt.recommended === false).map((alt) => alt.team),
+  );
+}
+
+function favoriteDot(game, used, notRecommended, canPick) {
+  if (used.has(game.favorite)) return "used";
+  if (notRecommended?.has(game.favorite) || !canPick) return "pass";
+  return "pick";
+}
+
+function statusDot(kind) {
+  const label = kind === "used" ? "Already used" : kind === "pick" ? "Available to pick" : "Not recommended";
+  const dot = cell("span", `status-dot is-${kind}`);
+  dot.setAttribute("role", "img");
+  dot.setAttribute("aria-label", label);
+  dot.append(cell("span", "status-dot-core"));
+  return dot;
+}
+
 async function loadSeason() {
   const season = await fetch("data/season.json", { cache: "no-store" }).then((response) => {
     if (!response.ok) throw new Error("season");
@@ -393,15 +414,15 @@ function resultBadge(resultText, result) {
   return wrap;
 }
 
-function renderBoard(week, logos, used, pick, saving) {
+function renderBoard(week, logos, used, pick, saving, notRecommended) {
   if (!document.getElementById("confidence")) return;
   document.getElementById("board-title").textContent = `Week ${week.week} confidence board`;
   const root = document.getElementById("confidence");
   root.replaceChildren();
-  appendBoardGames(root, week, logos, used, pick, saving);
+  appendBoardGames(root, week, logos, used, pick, saving, notRecommended);
 }
 
-function appendBoardGames(root, week, logos, used, pick, saving) {
+function appendBoardGames(root, week, logos, used, pick, saving, notRecommended) {
   const locked = Boolean(pick && kickedOff(week, pick.team));
   const games = [...week.games].sort((a, b) => b.rank - a.rank);
   const topRank = games[0]?.rank;
@@ -424,8 +445,9 @@ function appendBoardGames(root, week, logos, used, pick, saving) {
     const action = cell("div");
     const started = kickedOff(week, game.favorite);
     const selected = pick?.team === game.favorite;
+    const canPick = selected || !(started || locked);
     if (used.has(game.favorite)) {
-      action.append(cell("span", "status-note status-used", "Already used"));
+      // The red dot under the score is the used marker. No pick button.
     } else if (!selected && (started || locked)) {
       action.append(cell("span", "status-note", started ? "Kickoff passed" : "Pick locked"));
     } else {
@@ -442,6 +464,7 @@ function appendBoardGames(root, week, logos, used, pick, saving) {
     const score = cell("div", "match-prob");
     score.append(cell("strong", "", String(game.winsPer100)));
     score.append(cell("span", "", "wins / 100"));
+    score.append(statusDot(favoriteDot(game, used, notRecommended, canPick)));
     article.append(body, score);
     root.append(article);
   }
@@ -558,7 +581,7 @@ function renderBoardLink(state) {
 function paint(state) {
   safely(() => renderStats(state.season, state.weeks, state.pick));
   safely(() => renderCalendar(state));
-  safely(() => renderBoard(state.openWeek, state.season.logos, state.used, state.pick, state.saving));
+  safely(() => renderBoard(state.openWeek, state.season.logos, state.used, state.pick, state.saving, notRecommendedTeams(state.planner)));
   safely(() => renderBoardLink(state));
   safely(() => renderUsed(state.weeks));
   safely(() => renderPlanner(state));
@@ -632,7 +655,7 @@ function renderModalPickers(parent, state) {
     ? "Kickoff has passed. This pick can no longer be changed."
     : "Tap an eligible projected winner to save your pick."));
   const board = cell("div", "board modal-board");
-  appendBoardGames(board, openWeek, state.season.logos, used, pick, saving);
+  appendBoardGames(board, openWeek, state.season.logos, used, pick, saving, notRecommendedTeams(state.planner));
   parent.append(board);
 }
 
