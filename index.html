@@ -37,21 +37,29 @@
   </script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="shortcut icon" href="favicon.svg">
-  <link rel="stylesheet" href="theme.css?v=20261107z">
+  <link rel="stylesheet" href="theme.css?v=20261107aa">
 </head>
 <body>
-  <header class="topbar">
-    <button type="button" class="nav-menu" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+  <div class="app-frame">
+    <button type="button" class="sidebar-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
       <span class="nav-menu-icon" aria-hidden="true"></span>
     </button>
-    <div class="masthead">
+    <div class="sidebar-scrim" hidden></div>
+    <aside class="sidebar" id="site-nav">
       <a class="wordmark" href="#home">Raul’s Survivor</a>
-      <nav class="tabbar" id="site-nav" aria-label="Sections">
-        <div class="tabbar-pill" role="tablist">
-          <a class="tab is-active" href="#home" data-tab="home" aria-current="page">Home</a>
-          <a class="tab" href="#nfelo" data-tab="nfelo">NFELO</a>
-          <a class="tab" href="#other" data-tab="other">Other</a>
-        </div>
+      <nav class="tabbar" aria-label="Sections">
+        <a class="tab is-active" href="#home" data-tab="home" aria-current="page">
+          <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+          <span>Home</span>
+        </a>
+        <a class="tab" href="#nfelo" data-tab="nfelo">
+          <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+          <span>NFELO</span>
+        </a>
+        <a class="tab" href="#other" data-tab="other">
+          <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+          <span>Other</span>
+        </a>
       </nav>
       <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Dark mode">
     <svg class="theme-icon theme-sun" viewBox="0 0 24 24" aria-hidden="true">
@@ -65,8 +73,7 @@
     </svg>
     <span class="theme-knob" aria-hidden="true"></span>
       </button>
-    </div>
-  </header>
+    </aside>
   <main class="shell">
    <div class="tab-panel" data-panel="home">
 
@@ -168,6 +175,7 @@
      </section>
    </div>
   </main>
+  </div>
   <div id="pick-modal" class="modal-root" hidden>
     <div class="modal-sheet lg-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal-bar">
@@ -178,6 +186,6 @@
       <div id="modal-body"></div>
     </div>
   </div>
-  <script src="app.js?v=20261107z"></script>
+  <script src="app.js?v=20261107aa"></script>
 </body>
 </html>
